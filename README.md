@@ -4,7 +4,7 @@ This is purely a news application with TypeScript.
 
 
 ## Important!
-**There is not an actual Ionic Conference at this time.** This project is just to show off Ionic 2 components in a real-world application. Please go through the steps in [CONTRIBUTING.md](https://github.com/driftyco/ionic-conference-app/blob/master/.github/CONTRIBUTING.md) before submitting an issue.
+**On www.geeta-kavita.com, we paste poems as GIF picture files. You can right click on the poems to save the pictures and even print them. On another sister website www.geeta-kavita.com/wordpress, the same poems are presented in Unicode font in a mobile friendly format. ** Geeta-Kavita.com has become one of the most popular websites for Hindi poems and articles..
 
 
 ## Getting Started
@@ -13,7 +13,6 @@ This is purely a news application with TypeScript.
 * Run `npm install` from the project root.
 * Install the ionic CLI (`npm install -g ionic`)
 * Run `ionic serve` in a terminal from the project root.
-* Profit
 
 
 <!-- ## App Preview
