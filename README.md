@@ -7,53 +7,16 @@ This is purely a news application with TypeScript.
 **There is not an actual Ionic Conference at this time.** This project is just to show off Ionic 2 components in a real-world application. Please go through the steps in [CONTRIBUTING.md](https://github.com/driftyco/ionic-conference-app/blob/master/.github/CONTRIBUTING.md) before submitting an issue.
 
 
-## Table of Contents
- - [Getting Started](#getting-started)
- - [Contributing](#contributing)
- - [Use Cases](#use-cases)
- - [App Preview](#app-preview)
- - [File Structure of App](#file-structure-of-app)
-
-
 ## Getting Started
 
 * Clone this repository.
-* Want to use TypeScript? Both the `master` branch and the `typescript` branch now use TypeScript.
 * Run `npm install` from the project root.
 * Install the ionic CLI (`npm install -g ionic`)
 * Run `ionic serve` in a terminal from the project root.
 * Profit
 
-**Note:** Is your build slow? Update `npm` to 3.x: `npm install -g npm`.
 
-
-## Contributing
-See [CONTRIBUTING.md](https://github.com/driftyco/ionic-conference-app/blob/master/.github/CONTRIBUTING.md) :tada::+1:
-
-
-## Use Cases
-
-* Action Sheet - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/speaker-list/speaker-list.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/speaker-list/speaker-list.ts) ]
-* Alert - [ [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-* Cards - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/speaker-list/speaker-list.html) ]
-* Datetime - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/about/about.html) ]
-* Grid - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/login/login.html) ]
-* Inputs - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/login/login.html) ]
-* Items (Sliding) - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-* Menu - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/app.html) |
-[code](https://github.com/driftyco/ionic-conference-app/blob/master/src/app.ts) ]
-* Modal - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule-filter/schedule-filter.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-* Searchbar - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-* Segment - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-* Slides - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/tutorial/tutorial.html) |
-* Sticky headers - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.html) ]
-* Tabs - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/tabs/tabs.html) | [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/tabs/tabs.ts) ]
-* Toggle - [ [template](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule-filter/schedule-filter.html) ]
-[code](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/tutorial/tutorial.ts) ]
-* Using Angular HTTP for JSON - [ [code](https://github.com/driftyco/ionic-conference-app/blob/master/src/providers/conference-data.ts) | [usage](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/schedule/schedule.ts) ]
-
-
-## App Preview
+<!-- ## App Preview
 
 All app preview screenshots were taken by running `ionic serve --lab` on a retina display.
 
@@ -64,13 +27,10 @@ All app preview screenshots were taken by running `ionic serve --lab` on a retin
 
 - [About Page](https://github.com/driftyco/ionic-conference-app/blob/master/src/pages/about/about.html)
 
-  <img src="resources/screenshots/AboutPage.png" alt="Schedule">
+  <img src="resources/screenshots/AboutPage.png" alt="Schedule"> -->
 
 
-- To see more images of the app, check out the [screenshots directory](https://github.com/driftyco/ionic-conference-app/tree/master/resources/screenshots)!
-
-
-## File Structure of App
+<!-- ## File Structure of App
 
 ```
 ionic-conference-app/
@@ -194,3 +154,4 @@ ionic-conference-app/
 ├── tsconfig.json                       * Defines the root files and the compiler options
 ├── tslint.json                         * Defines the rules for the TypeScript linter
 ```
+ -->
