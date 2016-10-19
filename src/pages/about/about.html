@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>About</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="about-header">
+    <img src="assets/img/ionic-logo-white.svg">
+  </div>
+  <div padding class="about-info">
+    <h4>Ionic Conference</h4>
+
+    <ion-list no-lines>
+      <ion-item>
+        <ion-icon name="calendar" item-left></ion-icon>
+        <ion-label>Date</ion-label>
+        <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="conferenceDate"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="pin" item-left></ion-icon>
+        <ion-label>Location</ion-label>
+        <ion-select>
+          <ion-option value="madison" selected>Madison, WI</ion-option>
+          <ion-option value="austin">Austin, TX</ion-option>
+          <ion-option value="chicago">Chicago, IL</ion-option>
+          <ion-option value="seattle">Seattle, WA</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <p>
+      Geeta-Kavita is a website devoted to Hindi Literature, especially poetry and contemplations. The site is run by Rajiv Krishna Saxena, who is a professor of Biology / Immunology and was till recently the President / Vice President of the new South Asian University (SAARC University) in New Delhi. Prof. Saxena runs this site because of his interest in promoting Hindi poetry, literature and the Indian thought. Garima Saxena is an advisor / expert on artwork.
+    </p>
+    <p>
+      Prof. Saxena has translated all 700 Sanskrit shlokas in Shrimad Bhagwat Geeta into metered Hindi verses. This work has been published by Pustak Mahal, Delhi, under the title “Geeta Kavya Madhuri”. Another book of Prof. Saxena “Baal Geeta” was recently published by Penguin Books. In Baal Geeta, main ideas of Geeta have been paraphrased into very simple Hindi verses for children and first time readers of Geeta. Excerpts from Both these books are available on this website.
+    </p>
+    <p>
+      Website has a selection of large number of well known Hindi poems and some thought provoking articles. The collection is constantly growing. Readers can forward the poems / articles they like to their friends and dear ones and thus promote Hindi literature. Facility to forward the link has been provided. Reader’s feedback is most welcome.
+    </p>
+  </div>
+</ion-content>
