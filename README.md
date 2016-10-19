@@ -1,6 +1,6 @@
-# Ionic 2 Conference Application
+# geeta-kavita (IO-2) Application
 
-This is purely a demo of Ionic 2 with TypeScript. It is still in development.
+This is purely a news application with TypeScript.
 
 
 ## Important!
