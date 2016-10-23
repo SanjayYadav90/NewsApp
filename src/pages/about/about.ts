@@ -6,10 +6,10 @@ import { PopoverController, ViewController } from 'ionic-angular';
 @Component({
   template: `
     <ion-list>
-      <button ion-item (click)="close()">Learn Ionic</button>
+      <button ion-item (click)="close()">Read More</button>
       <button ion-item (click)="close()">Documentation</button>
       <button ion-item (click)="close()">Showcase</button>
-      <button ion-item (click)="close()">GitHub Repo</button>
+      <button ion-item (click)="close()">What new</button>
     </ion-list>
   `
 })
@@ -28,7 +28,7 @@ export class PopoverPage {
   templateUrl: 'about.html'
 })
 export class AboutPage {
-  conferenceDate = '2047-05-17';
+  conferenceDate = '2016-10-27';
 
   constructor(public popoverCtrl: PopoverController) { }
 

@@ -6,7 +6,7 @@
 
     <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
       <ion-segment-button value="all">
-        All
+        All News
       </ion-segment-button>
       <ion-segment-button value="favorites">
         Favorites
@@ -47,7 +47,7 @@
           <p>
             {{session.timeStart}} &mdash;
             {{session.timeEnd}}:
-            {{session.location}}
+            <!-- {{session.location}} -->
           </p>
         </button>
 
