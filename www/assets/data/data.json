@@ -219,7 +219,7 @@
 
   "speakers": [
     {
-      "name": "Burt Bear",
+      "name": "News Bear",
       "profilePic": "assets/img/speakers/bear.jpg",
       "twitter": "ionicframework",
       "about": "Burt is a Bear.",
@@ -228,7 +228,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Charlie Cheetah",
+      "name": "Charlie Group",
       "profilePic": "assets/img/speakers/cheetah.jpg",
       "twitter": "ionicframework",
       "about": "Charlie is a Cheetah.",
@@ -246,7 +246,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Eva Eagle",
+      "name": "My Morning",
       "profilePic": "assets/img/speakers/eagle.jpg",
       "twitter": "ionicframework",
       "about": "Eva is an Eagle.",
@@ -255,7 +255,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Ellie Elephant",
+      "name": "Delay Date",
       "profilePic": "assets/img/speakers/elephant.jpg",
       "twitter": "ionicframework",
       "about": "Ellie is an Elephant.",
@@ -264,7 +264,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Gino Giraffe",
+      "name": "Gino Group",
       "profilePic": "assets/img/speakers/giraffe.jpg",
       "twitter": "ionicframework",
       "about": "Gino is a Giraffe.",
@@ -273,7 +273,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Isabella Iguana",
+      "name": "Hello World",
       "profilePic": "assets/img/speakers/iguana.jpg",
       "twitter": "ionicframework",
       "about": "Isabella is an Iguana.",
@@ -282,7 +282,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Karl Kitten",
+      "name": "Kitz Kitten",
       "profilePic": "assets/img/speakers/kitten.jpg",
       "twitter": "ionicframework",
       "about": "Karl is a Kitten.",
@@ -291,7 +291,7 @@
       "phone": "+1-541-754-3010"
     },
     {
-      "name": "Lionel Lion",
+      "name": "Lionel Limo",
       "profilePic": "assets/img/speakers/lion.jpg",
       "twitter": "ionicframework",
       "about": "Lionel is a Lion.",

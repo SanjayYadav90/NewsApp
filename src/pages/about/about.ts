@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { PopoverController, ViewController } from 'ionic-angular';
 
 
