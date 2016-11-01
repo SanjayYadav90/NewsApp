@@ -21085,7 +21085,7 @@ sub {
 }
 
 .about-header {
-  background-color: #434954;
+  background-color: #cbcd9e;
   padding: 16px;
   width: 100%;
   min-height: 150px;
@@ -21121,6 +21121,10 @@ sub {
 .ios .about-info ion-icon {
   width: auto;
   margin-right: 10px;
+}
+
+.about-container {
+  background-color: #cbcd9e;
 }
 
 page-account img {
@@ -21201,6 +21205,22 @@ page-schedule ion-item-sliding[track=documentation] ion-label {
 page-schedule ion-item-sliding[track=navigation] ion-label {
   border-left: 2px solid #6600CC;
   padding-left: 10px;
+}
+
+.list-container {
+  float: left;
+  width: 100%;
+}
+
+.img-container {
+  float: left;
+  width: 20%;
+}
+
+.text-container {
+  float: left;
+  width: 80%;
+  word-wrap: break-word;
 }
 
 .reset-filters {
@@ -21318,6 +21338,10 @@ page-speaker-list ion-card.speaker ion-card-header,
 page-speaker-list ion-card.speaker ion-card-content,
 page-speaker-list ion-card.speaker ion-card-content .list ion-item-content {
   padding: 0;
+}
+
+.bg--color {
+  background-color: #cbcd9e;
 }
 
 page-tutorial .toolbar-background {

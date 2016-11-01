@@ -7,11 +7,11 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="outer-content speaker-list">
+<ion-content class="outer-content speaker-list bg--color">
   <ion-card *ngFor="let speaker of speakers" class="speaker">
 
     <ion-card-header>
-      <ion-item>
+      <ion-item class="bg--color">
         <ion-avatar item-left>
           <img [src]="speaker.profilePic">
         </ion-avatar>
@@ -24,16 +24,16 @@
 
     <ion-card-content class="outer-content">
       <ion-list>
-        <button ion-item *ngFor="let session of speaker.sessions" (click)="goToSessionDetail(session)">
+        <button ion-item *ngFor="let session of speaker.sessions" (click)="goToSessionDetail(session)" class="bg--color">
           <h3>{{session.name}}</h3>
         </button>
-        <button ion-item (click)="goToSpeakerDetail(speaker)">
+        <button ion-item (click)="goToSpeakerDetail(speaker)" class="bg--color">
           <h3>About {{speaker.name}}</h3>
         </button>
       </ion-list>
     </ion-card-content>
 
-    <ion-item>
+    <ion-item class="bg--color">
       <button ion-button icon-left (click)="goToSpeakerTwitter(speaker)" clear item-left>
         <ion-icon name="logo-twitter"></ion-icon>
         Tweet

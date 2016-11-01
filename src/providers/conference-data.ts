@@ -14,6 +14,7 @@ export class ConferenceData {
   load() {
     if (this.data) {
       // already loaded data
+      console.log(this.data);
       return Promise.resolve(this.data);
     }
 
