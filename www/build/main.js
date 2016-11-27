@@ -70762,7 +70762,7 @@ var SessionDetailPage = (function () {
     }
     SessionDetailPage = __decorate$14([
         Component({
-            selector: 'page-session-detail', template: /* ion-inline-template */ '<ion-header>\n   <ion-navbar>\n      <ion-title>Session</ion-title>\n   </ion-navbar>\n</ion-header>\n<ion-content padding>\n   <img [src]="session.profilePic" width="340" height="180">\n   <h1>{{session.name}}</h1>\n   <h4 *ngFor="let speaker of session.speakers">\n      {{speaker.name}}\n   </h4>\n   <p>\n      {{session.timeStart}} - {{session.timeEnd}}\n   </p>\n   <p>{{session.location}}</p>\n   <p>{{session.description}}</p>\n</ion-content>'
+            selector: 'page-session-detail', template: /* ion-inline-template */ '<ion-header>\n   <ion-navbar>\n      <ion-title>Kavita Details</ion-title>\n   </ion-navbar>\n</ion-header>\n<ion-content padding>\n   <h3>{{session.name}}</h3>\n   <img [src]="session.profilePic" width="340" height="180"> <br>\n   <h4 *ngFor="let speaker of session.speakers">\n      {{speaker.name}}\n   </h4>\n   <!-- <p>\n      {{session.timeStart}} - {{session.timeEnd}}\n   </p> -->\n   <p>{{session.location}}</p>\n   <p>{{session.description}}</p>\n</ion-content>'
         }), 
         __metadata$13('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
     ], SessionDetailPage);
