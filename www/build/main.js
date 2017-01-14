@@ -71047,7 +71047,7 @@ var TabsPage = (function () {
         this.mySelectedIndex = navParams.data.tabIndex || 0;
     }
     TabsPage = __decorate$6([
-        Component({ template: /* ion-inline-template */ '<ion-tabs [selectedIndex]="mySelectedIndex">\n  <ion-tab [root]="tab1Root" tabTitle="All News" tabIcon="calendar"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Group" tabIcon="contacts"></ion-tab>\n  <ion-tab [root]="tab3Root" tabTitle="Geo" tabIcon="map"></ion-tab>\n  <ion-tab [root]="tab4Root" tabTitle="About" tabIcon="information-circle"></ion-tab>\n</ion-tabs>\n'
+        Component({ template: /* ion-inline-template */ '<ion-tabs [selectedIndex]="mySelectedIndex" tabbarPlacement="top">\n  <ion-tab [root]="tab1Root" tabTitle="All News" tabIcon="calendar"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Group" tabIcon="contacts"></ion-tab>\n  <ion-tab [root]="tab3Root" tabTitle="Geo" tabIcon="map"></ion-tab>\n  <ion-tab [root]="tab4Root" tabTitle="About" tabIcon="information-circle"></ion-tab>\n</ion-tabs>\n'
         }), 
         __metadata$5('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
     ], TabsPage);
