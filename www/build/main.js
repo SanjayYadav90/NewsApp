@@ -66499,7 +66499,7 @@ var MapPage = (function () {
     };
     MapPage = __decorate$9([
         Component({
-            selector: 'page-map', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Map</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="map-page">\n  <div id="map"></div>\n</ion-content>\n'
+            selector: 'page-map', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Map</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<!-- <ion-content class="map-page">\n  <div id="map"></div>\n</ion-content> -->\n'
         }), 
         __metadata$8('design:paramtypes', [(typeof (_a = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _a) || Object])
     ], MapPage);
