@@ -4,13 +4,9 @@ import { Storage } from '@ionic/storage';
 
 import { ConferenceApp } from './app.component';
 import { AboutPage, PopoverPage } from '../pages/about/about';
-import { AccountPage } from '../pages/account/account';
-import { LoginPage } from '../pages/login/login';
-import { MapPage } from '../pages/map/map';
 import { SchedulePage } from '../pages/schedule/schedule';
 import { ScheduleFilterPage } from '../pages/schedule-filter/schedule-filter';
 import { SessionDetailPage } from '../pages/session-detail/session-detail';
-import { SignupPage } from '../pages/signup/signup';
 import { SpeakerDetailPage } from '../pages/speaker-detail/speaker-detail';
 import { SpeakerListPage } from '../pages/speaker-list/speaker-list';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -24,14 +20,10 @@ import { UserData } from '../providers/user-data';
   declarations: [
     ConferenceApp,
     AboutPage,
-    AccountPage,
-    LoginPage,
-    MapPage,
     PopoverPage,
     SchedulePage,
     ScheduleFilterPage,
     SessionDetailPage,
-    SignupPage,
     SpeakerDetailPage,
     SpeakerListPage,
     TabsPage,
@@ -44,14 +36,10 @@ import { UserData } from '../providers/user-data';
   entryComponents: [
     ConferenceApp,
     AboutPage,
-    AccountPage,
-    LoginPage,
-    MapPage,
     PopoverPage,
     SchedulePage,
     ScheduleFilterPage,
     SessionDetailPage,
-    SignupPage,
     SpeakerDetailPage,
     SpeakerListPage,
     TabsPage,

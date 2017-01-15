@@ -3,9 +3,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Events, MenuController, Nav, Platform } from 'ionic-angular';
 // import { Splashscreen, StatusBar } from 'ionic-native';
 
-import { AccountPage } from '../pages/account/account';
-import { LoginPage } from '../pages/login/login';
-import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 
@@ -34,17 +31,9 @@ export class ConferenceApp {
   appPages: PageObj[] = [
     { title: 'All News', component: TabsPage, icon: 'calendar' },
     { title: 'Groups', component: TabsPage, index: 1, icon: 'contacts' },
-    { title: 'Map', component: TabsPage, index: 2, icon: 'map' },
     { title: 'About', component: TabsPage, index: 3, icon: 'information-circle' },
   ];
-  loggedInPages: PageObj[] = [
-    { title: 'Account', component: AccountPage, icon: 'person' },
-    { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
-  ];
-  loggedOutPages: PageObj[] = [
-    { title: 'Login', component: LoginPage, icon: 'log-in' },
-    { title: 'Signup', component: SignupPage, icon: 'person-add' }
-  ];
+
   rootPage: any = TutorialPage;
 
   constructor(
@@ -91,13 +80,7 @@ export class ConferenceApp {
   }
 
   listenToLoginEvents() {
-    this.events.subscribe('user:login', () => {
-      this.enableMenu(true);
-    });
-
-    this.events.subscribe('user:signup', () => {
-      this.enableMenu(true);
-    });
+    
 
     this.events.subscribe('user:logout', () => {
       this.enableMenu(false);

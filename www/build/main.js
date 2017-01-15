@@ -5,6 +5,13 @@ var global$1 = typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
             typeof window !== "undefined" ? window : {}
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -530,6 +537,12 @@ function makePropDecorator(name, props, parentClass) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Inject decorator and metadata.
+ *
+ * @stable
+ * @Annotation
+ */
 var Inject = makeParamDecorator('Inject', [['token', undefined]]);
 /**
  * Optional decorator and metadata.
@@ -574,6 +587,29 @@ var Host = makeParamDecorator('Host', []);
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Creates a token that can be used in a DI Provider.
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/Ys9ezXpj2Mnoy3Uc8KBp?p=preview))
+ *
+ * ```typescript
+ * var t = new OpaqueToken("value");
+ *
+ * var injector = Injector.resolveAndCreate([
+ *   {provide: t, useValue: "bindingValue"}
+ * ]);
+ *
+ * expect(injector.get(t)).toEqual("bindingValue");
+ * ```
+ *
+ * Using an `OpaqueToken` is preferable to using strings as tokens because of possible collisions
+ * caused by multiple providers using the same string as two different tokens.
+ *
+ * Using an `OpaqueToken` is preferable to using an `Object` as tokens because it provides better
+ * error messages.
+ * @stable
+ */
+// so that metadata is gathered for this class
 var OpaqueToken = (function () {
     function OpaqueToken(_desc) {
         this._desc = _desc;
@@ -595,6 +631,40 @@ var OpaqueToken = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * This token can be used to create a virtual provider that will populate the
+ * `entryComponents` fields of components and ng modules based on its `useValue`.
+ * All components that are referenced in the `useValue` value (either directly
+ * or in a nested array or map) will be added to the `entryComponents` property.
+ *
+ * ### Example
+ * The following example shows how the router can populate the `entryComponents`
+ * field of an NgModule based on the router configuration which refers
+ * to components.
+ *
+ * ```typescript
+ * // helper function inside the router
+ * function provideRoutes(routes) {
+ *   return [
+ *     {provide: ROUTES, useValue: routes},
+ *     {provide: ANALYZE_FOR_ENTRY_COMPONENTS, useValue: routes, multi: true}
+ *   ];
+ * }
+ *
+ * // user code
+ * let routes = [
+ *   {path: '/root', component: RootComp},
+ *   {path: '/teams', component: TeamsComp}
+ * ];
+ *
+ * @NgModule({
+ *   providers: [provideRoutes(routes)]
+ * })
+ * class ModuleWithRoutes {}
+ * ```
+ *
+ * @experimental
  */
 var ANALYZE_FOR_ENTRY_COMPONENTS = new OpaqueToken('AnalyzeForEntryComponents');
 /**
@@ -727,6 +797,11 @@ var ViewChild = makePropDecorator('ViewChild', [
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Describes within the change detector which strategy will be used the next time change
+ * detection is triggered.
+ * @stable
+ */
 var ChangeDetectionStrategy;
 (function (ChangeDetectionStrategy) {
     /**
@@ -785,6 +860,12 @@ function isDefaultChangeDetectionStrategy(changeDetectionStrategy) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Directive decorator and metadata.
+ *
+ * @stable
+ * @Annotation
  */
 var Directive = makeDecorator('Directive', {
     selector: undefined,
@@ -1040,6 +1121,14 @@ var AfterViewChecked = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Defines a schema that will allow:
+ * - any non-Angular elements with a `-` in their name,
+ * - any properties on elements with a `-` in their name which is the common rule for custom
+ * elements.
+ *
+ * @stable
+ */
 var CUSTOM_ELEMENTS_SCHEMA = {
     name: 'custom-elements'
 };
@@ -1166,6 +1255,18 @@ var ViewMetadata = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Allows to refer to references which are not yet defined.
+ *
+ * For instance, `forwardRef` is used when the `token` which we need to refer to for the purposes of
+ * DI is declared,
+ * but not yet defined. It is also used when the `token` which we use when creating a query is not
+ * yet defined.
+ *
+ * ### Example
+ * {@example core/di/ts/forward_ref/forward_ref_spec.ts region='forward_ref'}
+ * @experimental
  */
 function forwardRef(forwardRefFn) {
     forwardRefFn.__forward_ref__ = forwardRef;
@@ -1324,6 +1425,8 @@ var Injector = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -1888,6 +1991,22 @@ var MixingMultiProvidersWithRegularProvidersError = (function (_super) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A unique object used for retrieving items from the {@link ReflectiveInjector}.
+ *
+ * Keys have:
+ * - a system-wide unique `id`.
+ * - a `token`.
+ *
+ * `Key` is used internally by {@link ReflectiveInjector} because its system-wide unique `id` allows
+ * the
+ * injector to store created objects in a more efficient way.
+ *
+ * `Key` should not be created directly. {@link ReflectiveInjector} creates keys automatically when
+ * resolving
+ * providers.
+ * @experimental
+ */
 var ReflectiveKey = (function () {
     /**
      * Private
@@ -2166,6 +2285,9 @@ var __extends$2 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Reflective information about a symbol, including annotations, interfaces, and other metadata.
+ */
 
 /**
  * Provides access to reflection data about symbols. Used internally by Angular
@@ -2323,6 +2445,10 @@ function _mergeMaps(target, config) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * The {@link Reflector} used internally in Angular to access metadata
+ * about symbols.
+ */
 var reflector = new Reflector(new ReflectionCapabilities());
 
 /**
@@ -2331,6 +2457,10 @@ var reflector = new Reflector(new ReflectionCapabilities());
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * `Dependency` is used by the framework to extend DI.
+ * This is internal to Angular and should not be used directly.
  */
 var ReflectiveDependency = (function () {
     function ReflectiveDependency(key, optional, lowerBoundVisibility, upperBoundVisibility, properties) {
@@ -2545,6 +2675,7 @@ function _createDependency(token /** TODO #9100 */, optional /** TODO #9100 */, 
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Threshold for the dynamic version
 var _MAX_CONSTRUCTION_COUNTER = 10;
 var UNDEFINED = new Object();
 var ReflectiveProtoInjectorInlineStrategy = (function () {
@@ -3474,6 +3605,10 @@ function isPromise(obj) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A function that will be executed when an application is initialized.
+ * @experimental
+ */
 var APP_INITIALIZER = new OpaqueToken('Application Initializer');
 /**
  * A class that reflects the state of running {@link APP_INITIALIZER}s.
@@ -3524,6 +3659,16 @@ var ApplicationInitStatus = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A DI Token representing a unique string id assigned to the application by Angular and used
+ * primarily for prefixing application attributes and CSS styles when
+ * {@link ViewEncapsulation#Emulated} is being used.
+ *
+ * If you need to avoid randomly generated value to be used as an application id, you can provide
+ * a custom value via a DI provider <!-- TODO: provider --> configuring the root {@link Injector}
+ * using this token.
+ * @experimental
  */
 var APP_ID = new OpaqueToken('AppId');
 function _appIdRandomProviderFactory() {
@@ -3594,6 +3739,11 @@ var __extends$4 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Indicates that a component is still being loaded in a synchronous compile.
+ *
+ * @stable
+ */
 var ComponentStillLoadingError = (function (_super) {
     __extends$4(ComponentStillLoadingError, _super);
     function ComponentStillLoadingError(compType) {
@@ -4707,6 +4857,10 @@ var KeyValueChangeRecord = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A repository of different iterable diffing strategies used by NgFor, NgClass, and others.
+ * @stable
+ */
 var IterableDiffers = (function () {
     function IterableDiffers(factories) {
         this.factories = factories;
@@ -4774,6 +4928,10 @@ var IterableDiffers = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A repository of different Map diffing strategies used by NgClass, NgStyle, and others.
+ * @stable
  */
 var KeyValueDiffers = (function () {
     function KeyValueDiffers(factories) {
@@ -4939,6 +5097,9 @@ var ChangeDetectorRef = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Structural diffing for `Object`s and `Map`s.
+ */
 var keyValDiff = [new DefaultKeyValueDifferFactory()];
 /**
  * Structural diffing for `Iterable` types such as `Array`s.
@@ -4954,6 +5115,10 @@ var defaultKeyValueDiffers = new KeyValueDiffers(keyValDiff);
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @experimental
+ */
+// TODO (matsko): add typing for the animation function
 var RenderComponentType = (function () {
     function RenderComponentType(id, templateUrl, slotCount, encapsulation, styles, animations) {
         this.id = id;
@@ -5128,6 +5293,9 @@ function leave(scope, returnValue) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * True if WTF is enabled.
+ */
 var wtfEnabled = detectWTF();
 function noopScope(arg0, arg1) {
     return null;
@@ -5200,6 +5368,24 @@ var wtfLeave = wtfEnabled ? leave : function (s, r) { return r; };
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Represents a container where one or more Views can be attached.
+ *
+ * The container can contain two kinds of Views. Host Views, created by instantiating a
+ * {@link Component} via {@link #createComponent}, and Embedded Views, created by instantiating an
+ * {@link TemplateRef Embedded Template} via {@link #createEmbeddedView}.
+ *
+ * The location of the View Container within the containing View is specified by the Anchor
+ * `element`. Each View Container can have only one Anchor Element and each Anchor Element can only
+ * have a single View Container.
+ *
+ * Root elements of Views attached to this container become siblings of the Anchor Element in
+ * the Rendered View.
+ *
+ * To access a `ViewContainerRef` of an Element, you can either place a {@link Directive} injected
+ * with `ViewContainerRef` on the Element, or you obtain it via a {@link ViewChild} query.
+ * @stable
  */
 var ViewContainerRef = (function () {
     function ViewContainerRef() {
@@ -5365,6 +5551,11 @@ var ViewType;
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * An AppElement is created for elements that have a ViewContainerRef,
+ * a nested component or a <template> element to keep data around
+ * that is needed for later instantiations.
+ */
 var AppElement = (function () {
     function AppElement(index, parentIndex, parentView, nativeElement) {
         this.index = index;
@@ -5482,6 +5673,37 @@ var __extends$6 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * An error thrown if application changes model breaking the top-down data flow.
+ *
+ * This exception is only thrown in dev mode.
+ *
+ * <!-- TODO: Add a link once the dev mode option is configurable -->
+ *
+ * ### Example
+ *
+ * ```typescript
+ * @Component({
+ *   selector: 'parent',
+ *   template: '<child [prop]="parentProp"></child>',
+ * })
+ * class Parent {
+ *   parentProp = 'init';
+ * }
+ *
+ * @Directive({selector: 'child', inputs: ['prop']})
+ * class Child {
+ *   constructor(public parent: Parent) {}
+ *
+ *   set prop(v) {
+ *     // this updates the parent property, which is disallowed during change detection
+ *     // this will result in ExpressionChangedAfterItHasBeenCheckedError
+ *     this.parent.parentProp = 'updated';
+ *   }
+ * }
+ * ```
+ * @stable
+ */
 var ExpressionChangedAfterItHasBeenCheckedError = (function (_super) {
     __extends$6(ExpressionChangedAfterItHasBeenCheckedError, _super);
     function ExpressionChangedAfterItHasBeenCheckedError(oldValue, currValue) {
@@ -5845,6 +6067,14 @@ var __extends$5 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Represents an instance of a Component created via a {@link ComponentFactory}.
+ *
+ * `ComponentRef` provides access to the Component Instance as well other objects related to this
+ * Component Instance and allows you to destroy the Component Instance via the {@link #destroy}
+ * method.
+ * @stable
+ */
 var ComponentRef = (function () {
     function ComponentRef() {
     }
@@ -5992,6 +6222,9 @@ var __extends$7 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * @stable
+ */
 var NoComponentFactoryError = (function (_super) {
     __extends$7(NoComponentFactoryError, _super);
     function NoComponentFactoryError(component) {
@@ -6089,6 +6322,7 @@ var isObject_1$1 = {
 	isObject: isObject_2
 };
 
+// typeof any so that it we don't have to cast when comparing a result to the error object
 var errorObject_1$2 = { e: {} };
 
 var errorObject = {
@@ -6859,6 +7093,9 @@ var SubjectSubscriber = (function (_super) {
     }
     return SubjectSubscriber;
 }(Subscriber_1.Subscriber));
+/**
+ * @class Subject<T>
+ */
 var Subject = (function (_super) {
     __extends$9(Subject, _super);
     function Subject() {
@@ -7003,6 +7240,53 @@ var __extends$8 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Use by directives and components to emit custom Events.
+ *
+ * ### Examples
+ *
+ * In the following example, `Zippy` alternatively emits `open` and `close` events when its
+ * title gets clicked:
+ *
+ * ```
+ * @Component({
+ *   selector: 'zippy',
+ *   template: `
+ *   <div class="zippy">
+ *     <div (click)="toggle()">Toggle</div>
+ *     <div [hidden]="!visible">
+ *       <ng-content></ng-content>
+ *     </div>
+ *  </div>`})
+ * export class Zippy {
+ *   visible: boolean = true;
+ *   @Output() open: EventEmitter<any> = new EventEmitter();
+ *   @Output() close: EventEmitter<any> = new EventEmitter();
+ *
+ *   toggle() {
+ *     this.visible = !this.visible;
+ *     if (this.visible) {
+ *       this.open.emit(null);
+ *     } else {
+ *       this.close.emit(null);
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The events payload can be accessed by the parameter `$event` on the components output event
+ * handler:
+ *
+ * ```
+ * <zippy (open)="onOpen($event)" (close)="onClose($event)"></zippy>
+ * ```
+ *
+ * Uses Rx.Observable but provides an adapter to make it work as specified here:
+ * https://github.com/jhusain/observable-spec
+ *
+ * Once a reference implementation of the spec is available, switch to it.
+ * @stable
+ */
 var EventEmitter = (function (_super) {
     __extends$8(EventEmitter, _super);
     /**
@@ -7134,6 +7418,77 @@ var NgZoneImpl = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * An injectable service for executing work inside or outside of the Angular zone.
+ *
+ * The most common use of this service is to optimize performance when starting a work consisting of
+ * one or more asynchronous tasks that don't require UI updates or error handling to be handled by
+ * Angular. Such tasks can be kicked off via {@link #runOutsideAngular} and if needed, these tasks
+ * can reenter the Angular zone via {@link #run}.
+ *
+ * <!-- TODO: add/fix links to:
+ *   - docs explaining zones and the use of zones in Angular and change-detection
+ *   - link to runOutsideAngular/run (throughout this file!)
+ *   -->
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/lY9m8HLy7z06vDoUaSN2?p=preview))
+ * ```
+ * import {Component, View, NgZone} from '@angular/core';
+ * import {NgIf} from '@angular/common';
+ *
+ * @Component({
+ *   selector: 'ng-zone-demo'.
+ *   template: `
+ *     <h2>Demo: NgZone</h2>
+ *
+ *     <p>Progress: {{progress}}%</p>
+ *     <p *ngIf="progress >= 100">Done processing {{label}} of Angular zone!</p>
+ *
+ *     <button (click)="processWithinAngularZone()">Process within Angular zone</button>
+ *     <button (click)="processOutsideOfAngularZone()">Process outside of Angular zone</button>
+ *   `,
+ * })
+ * export class NgZoneDemo {
+ *   progress: number = 0;
+ *   label: string;
+ *
+ *   constructor(private _ngZone: NgZone) {}
+ *
+ *   // Loop inside the Angular zone
+ *   // so the UI DOES refresh after each setTimeout cycle
+ *   processWithinAngularZone() {
+ *     this.label = 'inside';
+ *     this.progress = 0;
+ *     this._increaseProgress(() => console.log('Inside Done!'));
+ *   }
+ *
+ *   // Loop outside of the Angular zone
+ *   // so the UI DOES NOT refresh after each setTimeout cycle
+ *   processOutsideOfAngularZone() {
+ *     this.label = 'outside';
+ *     this.progress = 0;
+ *     this._ngZone.runOutsideAngular(() => {
+ *       this._increaseProgress(() => {
+ *       // reenter the Angular zone and display done
+ *       this._ngZone.run(() => {console.log('Outside Done!') });
+ *     }}));
+ *   }
+ *
+ *
+ *   _increaseProgress(doneCallback: () => void) {
+ *     this.progress += 1;
+ *     console.log(`Current progress: ${this.progress}%`);
+ *
+ *     if (this.progress < 100) {
+ *       window.setTimeout(() => this._increaseProgress(doneCallback)), 10)
+ *     } else {
+ *       doneCallback();
+ *     }
+ *   }
+ * }
+ * ```
+ * @experimental
  */
 var NgZone = (function () {
     function NgZone(_a) {
@@ -7312,6 +7667,12 @@ var NgZone = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * The Testability service provides testing hooks that can be accessed from
+ * the browser and by services such as Protractor. Each bootstrapped Angular
+ * application on the page will have an instance of Testability.
+ * @experimental
  */
 var Testability = (function () {
     function Testability(_ngZone) {
@@ -7938,6 +8299,14 @@ var __extends$14 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Represents an instance of an NgModule created via a {@link NgModuleFactory}.
+ *
+ * `NgModuleRef` provides access to the NgModule Instance as well other objects related to this
+ * NgModule Instance.
+ *
+ * @stable
+ */
 var NgModuleRef = (function () {
     function NgModuleRef() {
     }
@@ -8070,6 +8439,29 @@ function registerModuleFactory(id, factory) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * An unmodifiable list of items that Angular keeps up to date when the state
+ * of the application changes.
+ *
+ * The type of object that {@link Query} and {@link ViewQueryMetadata} provide.
+ *
+ * Implements an iterable interface, therefore it can be used in both ES6
+ * javascript `for (var i of items)` loops as well as in Angular templates with
+ * `*ngFor="let i of myList"`.
+ *
+ * Changes can be observed by subscribing to the changes `Observable`.
+ *
+ * NOTE: In the future this class will implement an `Observable` interface.
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/RX8sJnQYl9FWuSCWme5z?p=preview))
+ * ```typescript
+ * @Component({...})
+ * class Container {
+ *   @ViewChildren(Item) items:QueryList<Item>;
+ * }
+ * ```
+ * @stable
  */
 var QueryList = (function () {
     function QueryList() {
@@ -8279,6 +8671,9 @@ var __extends$16 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * @stable
+ */
 var ViewRef = (function () {
     function ViewRef() {
     }
@@ -8651,6 +9046,9 @@ var platformCore = createPlatformFactory(null, 'core', _CORE_PLATFORM_PROVIDERS)
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @experimental i18n support is experimental.
+ */
 var LOCALE_ID = new OpaqueToken('LocaleId');
 /**
  * @experimental i18n support is experimental.
@@ -8828,6 +9226,9 @@ var AnimationKeyframe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @experimental Animation support is experimental.
+ */
 var AnimationPlayer = (function () {
     function AnimationPlayer() {
     }
@@ -8973,6 +9374,9 @@ var __extends$18 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * @experimental Animation support is experimental.
+ */
 var AUTO_STYLE = '*';
 /**
  * Metadata representing the entry of animations.
@@ -10587,6 +10991,13 @@ var __core_private__ = {
  * Entry point for all public APIs of the core package.
  */
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$1;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -10837,6 +11248,9 @@ function escapeRegExp$1(s) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A segment of text within the template.
  */
 var TextAst = (function () {
     function TextAst(value, ngContentIndex, sourceSpan) {
@@ -11121,6 +11535,8 @@ function templateVisitAll(visitor, asts, context) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs$1 = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -12115,6 +12531,7 @@ var __extends$23 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+//// Types
 var TypeModifier;
 (function (TypeModifier) {
     TypeModifier[TypeModifier["Const"] = 0] = "Const";
@@ -16891,6 +17308,9 @@ var __extends$27 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * An i18n error.
+ */
 var I18nError = (function (_super) {
     __extends$27(I18nError, _super);
     function I18nError(span, msg) {
@@ -17312,6 +17732,9 @@ function _splitMeaningAndDesc(i18n) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A container for message extracted from the templates.
  */
 var MessageBundle = (function () {
     function MessageBundle(_htmlParser, _implicitTags, _implicitAttrs) {
@@ -18441,6 +18864,7 @@ var __extends$31 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+// http://cldr.unicode.org/index/cldr-spec/plural-rules
 var PLURAL_CASES = ['zero', 'one', 'two', 'few', 'many', 'other'];
 /**
  * Expands special forms into elements.
@@ -19163,6 +19587,16 @@ var __extends$21 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+// Group 1 = "bind-"
+// Group 2 = "let-"
+// Group 3 = "ref-/#"
+// Group 4 = "on-"
+// Group 5 = "bindon-"
+// Group 6 = "@"
+// Group 7 = the identifier after "bind-", "let-", "ref-/#", "on-", "bindon-" or "@"
+// Group 8 = identifier inside [()]
+// Group 9 = identifier inside []
+// Group 10 = identifier inside ()
 var BIND_NAME_REGEXP = /^(?:(?:(?:(bind-)|(let-)|(ref-|#)|(on-)|(bindon-)|(@))(.+))|\[\(([^\)]+)\)\]|\[([^\]]+)\]|\(([^\)]+)\))$/;
 var KW_BIND_IDX = 1;
 var KW_LET_IDX = 2;
@@ -24303,6 +24737,13 @@ function _cloneDirectiveWithTemplate(directive, template) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/*
+ * Resolve a `Type` for {@link Directive}.
+ *
+ * This interface can be overridden by the application developer to create custom behavior.
+ *
+ * See {@link Compiler}
+ */
 var DirectiveResolver = (function () {
     function DirectiveResolver(_reflector) {
         if (_reflector === void 0) { _reflector = reflector$1; }
@@ -27399,6 +27840,15 @@ function getStylesVarName(component) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * An internal module of the Angular compiler that begins with component types,
+ * extracts templates, and eventually produces a compiled version of the component
+ * ready for linking into an application.
+ *
+ * @security  When compiling templates at runtime, you must ensure that the entire template comes
+ * from a trusted source. Attacker-controlled data introduced by a template could expose your
+ * application to XSS risks.  For more detail, see the [Security Guide](http://g.co/ng/security).
+ */
 var RuntimeCompiler = (function () {
     function RuntimeCompiler(_injector, _metadataResolver, _templateNormalizer, _templateParser, _styleCompiler, _viewCompiler, _ngModuleCompiler, _compilerConfig) {
         this._injector = _injector;
@@ -27771,6 +28221,17 @@ var ModuleBoundCompiler = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// =================================================================================================
+// =================================================================================================
+// =========== S T O P   -  S T O P   -  S T O P   -  S T O P   -  S T O P   -  S T O P  ===========
+// =================================================================================================
+// =================================================================================================
+//
+//        DO NOT EDIT THIS LIST OF SECURITY SENSITIVE PROPERTIES WITHOUT A SECURITY REVIEW!
+//                               Reach out to mprobst for details.
+//
+// =================================================================================================
+/** Map from tagName|propertyName SecurityContext. Properties applying to all tags use '*'. */
 var SECURITY_SCHEMA = {};
 function registerContext(ctx, specs) {
     for (var _i = 0, specs_1 = specs; _i < specs_1.length; _i++) {
@@ -28441,6 +28902,24 @@ var PlatformLocation = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * `LocationStrategy` is responsible for representing and reading route state
+ * from the browser's URL. Angular provides two strategies:
+ * {@link HashLocationStrategy} and {@link PathLocationStrategy} (default).
+ *
+ * This is used under the hood of the {@link Location} service.
+ *
+ * Applications should use the {@link Router} or {@link Location} services to
+ * interact with application route state.
+ *
+ * For instance, {@link HashLocationStrategy} produces URLs like
+ * `http://example.com#/foo`, and {@link PathLocationStrategy} produces
+ * `http://example.com/foo` as an equivalent URL.
+ *
+ * See these two classes for more.
+ *
+ * @stable
+ */
 var LocationStrategy = (function () {
     function LocationStrategy() {
     }
@@ -28470,6 +28949,13 @@ var LocationStrategy = (function () {
  */
 var APP_BASE_HREF = new OpaqueToken('appBaseHref');
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$2;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -28632,6 +29118,38 @@ function getSymbolIterator$2() {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * `Location` is a service that applications can use to interact with a browser's URL.
+ * Depending on which {@link LocationStrategy} is used, `Location` will either persist
+ * to the URL's path or the URL's hash segment.
+ *
+ * Note: it's better to use {@link Router#navigate} service to trigger route changes. Use
+ * `Location` only if you need to interact with or create normalized URLs outside of
+ * routing.
+ *
+ * `Location` is responsible for normalizing the URL against the application's base href.
+ * A normalized URL is absolute from the URL host, includes the application's base href, and has no
+ * trailing slash:
+ * - `/my/app/user/123` is normalized
+ * - `my/app/user/123` **is not** normalized
+ * - `/my/app/user/123/` **is not** normalized
+ *
+ * ### Example
+ *
+ * ```
+ * import {Component} from '@angular/core';
+ * import {Location} from '@angular/common';
+ *
+ * @Component({selector: 'app-component'})
+ * class AppCmp {
+ *   constructor(location: Location) {
+ *     location.go('/foo');
+ *   }
+ * }
+ * ```
+ *
+ * @stable
+ */
 var Location = (function () {
     function Location(platformStrategy) {
         var _this = this;
@@ -28792,6 +29310,32 @@ var __extends$41 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * `HashLocationStrategy` is a {@link LocationStrategy} used to configure the
+ * {@link Location} service to represent its state in the
+ * [hash fragment](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax)
+ * of the browser's URL.
+ *
+ * For instance, if you call `location.go('/foo')`, the browser's URL will become
+ * `example.com#/foo`.
+ *
+ * ### Example
+ *
+ * ```
+ * import {Component, NgModule} from '@angular/core';
+ * import {
+ *   LocationStrategy,
+ *   HashLocationStrategy
+ * } from '@angular/common';
+ *
+ * @NgModule({
+ *   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
+ * })
+ * class AppModule {}
+ * ```
+ *
+ * @stable
+ */
 var HashLocationStrategy = (function (_super) {
     __extends$41(HashLocationStrategy, _super);
     function HashLocationStrategy(_platformLocation, _baseHref) {
@@ -28859,6 +29403,29 @@ var __extends$42 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * `PathLocationStrategy` is a {@link LocationStrategy} used to configure the
+ * {@link Location} service to represent its state in the
+ * [path](https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax) of the
+ * browser's URL.
+ *
+ * `PathLocationStrategy` is the default binding for {@link LocationStrategy}
+ * provided in {@link ROUTER_PROVIDERS}.
+ *
+ * If you're using `PathLocationStrategy`, you must provide a {@link APP_BASE_HREF}
+ * or add a base element to the document. This URL prefix that will be preserved
+ * when generating and recognizing URLs.
+ *
+ * For instance, if you provide an `APP_BASE_HREF` of `'/my/app'` and call
+ * `location.go('/foo')`, the browser's URL will become
+ * `example.com/my/app/foo`.
+ *
+ * Similarly, if you add `<base href='/my/app'/>` to the document and call
+ * `location.go('/foo')`, the browser's URL will become
+ * `example.com/my/app/foo`.
+ *
+ * @stable
+ */
 var PathLocationStrategy = (function (_super) {
     __extends$42(PathLocationStrategy, _super);
     function PathLocationStrategy(_platformLocation, href) {
@@ -28928,6 +29495,9 @@ var __extends$43 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * @experimental
+ */
 var NgLocalization = (function () {
     function NgLocalization() {
     }
@@ -29406,6 +29976,8 @@ function getPluralCase(locale, nLike) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs$2 = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -29623,6 +30195,32 @@ function isListLikeIterable$2(obj) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Adds and removes CSS classes on an HTML element.
+ *
+ * @howToUse
+ * ```
+ *     <some-element [ngClass]="'first second'">...</some-element>
+ *
+ *     <some-element [ngClass]="['first', 'second']">...</some-element>
+ *
+ *     <some-element [ngClass]="{'first': true, 'second': true, 'third': false}">...</some-element>
+ *
+ *     <some-element [ngClass]="stringExp|arrayExp|objExp">...</some-element>
+ * ```
+ *
+ * @description
+ *
+ * The CSS classes are updated as follow depending on the type of the expression evaluation:
+ * - `string` - the CSS classes listed in a string (space delimited) are added,
+ * - `Array` - the CSS classes (Array elements) are added,
+ * - `Object` - keys are CSS class names that get added when the expression given in the value
+ *              evaluates to a truthy value, otherwise class are removed.
+ *
+ * @stable
  */
 var NgClass = (function () {
     function NgClass(_iterableDiffers, _keyValueDiffers, _ngEl, _renderer) {
@@ -29939,6 +30537,30 @@ var RecordViewTuple = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Removes or recreates a portion of the DOM tree based on an {expression}.
+ *
+ * If the expression assigned to `ngIf` evaluates to a false value then the element
+ * is removed from the DOM, otherwise a clone of the element is reinserted into the DOM.
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/fe0kgemFBtmQOY31b4tw?p=preview)):
+ *
+ * ```
+ * <div *ngIf="errorCount > 0" class="error">
+ *   <!-- Error message displayed when the errorCount property on the current context is greater
+ * than 0. -->
+ *   {{errorCount}} errors detected
+ * </div>
+ * ```
+ *
+ * ### Syntax
+ *
+ * - `<div *ngIf="condition">...</div>`
+ * - `<div template="ngIf condition">...</div>`
+ * - `<template [ngIf]="condition"><div>...</div></template>`
+ *
+ * @stable
+ */
 var NgIf = (function () {
     function NgIf(_viewContainer, _template) {
         this._viewContainer = _viewContainer;
@@ -30222,6 +30844,38 @@ var NgSwitchDefault = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Adds / removes DOM sub-trees based on a numeric value. Tailored for pluralization.
+ *
+ * @howToUse
+ * ```
+ * <some-element [ngPlural]="value">
+ *   <ng-container *ngPluralCase="'=0'">there is nothing</ng-container>
+ *   <ng-container *ngPluralCase="'=1'">there is one</ng-container>
+ *   <ng-container *ngPluralCase="'few'">there are a few</ng-container>
+ *   <ng-container *ngPluralCase="'other'">there are exactly #</ng-container>
+ * </some-element>
+ * ```
+ *
+ * @description
+ *
+ * Displays DOM sub-trees that match the switch expression value, or failing that, DOM sub-trees
+ * that match the switch expression's pluralization category.
+ *
+ * To use this directive you must provide a container element that sets the `[ngPlural]` attribute
+ * to a switch expression. Inner elements with a `[ngPluralCase]` will display based on their
+ * expression:
+ * - if `[ngPluralCase]` is set to a value starting with `=`, it will only display if the value
+ *   matches the switch expression exactly,
+ * - otherwise, the view will be treated as a "category match", and will only display if exact
+ *   value matches aren't found and the value maps to its category for the defined locale.
+ *
+ * See http://cldr.unicode.org/index/cldr-spec/plural-rules
+ *
+ * @experimental
+ */
 var NgPlural = (function () {
     function NgPlural(_localization) {
         this._localization = _localization;
@@ -30307,6 +30961,28 @@ var NgPluralCase = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Update an HTML element styles.
+ *
+ * @howToUse
+ * ```
+ * <some-element [ngStyle]="{'font-style': styleExp}">...</some-element>
+ *
+ * <some-element [ngStyle]="{'max-width.px': widthExp}">...</some-element>
+ *
+ * <some-element [ngStyle]="objExp">...</some-element>
+ * ```
+ *
+ * @description
+ *
+ * The styles are updated according to the value of the expression evaluation:
+ * - keys are style names with an option `.<unit>` suffix (ie 'top.px', 'font-style.em'),
+ * - values are the values assigned to those properties (expressed in the given unit).
+ *
+ * @stable
+ */
 var NgStyle = (function () {
     function NgStyle(_differs, _ngEl, _renderer) {
         this._differs = _differs;
@@ -30364,6 +31040,28 @@ var NgStyle = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ *
+ * @whatItDoes Inserts an embedded view from a prepared `TemplateRef`
+ *
+ * @howToUse
+ * ```
+ * <template [ngTemplateOutlet]="templateRefExpression"
+ *           [ngOutletContext]="objectExpression">
+ * </template>
+ * ```
+ *
+ * @description
+ *
+ * You can attach a context object to the `EmbeddedViewRef` by setting `[ngOutletContext]`.
+ * `[ngOutletContext]` should be an object, the object's keys will be the local template variables
+ * available within the `TemplateRef`.
+ *
+ * Note: using the key `$implicit` in the context object will set it's value as default.
+ *
+ * @experimental
+ */
 var NgTemplateOutlet = (function () {
     function NgTemplateOutlet(_viewContainerRef) {
         this._viewContainerRef = _viewContainerRef;
@@ -30406,6 +31104,10 @@ var NgTemplateOutlet = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A collection of Angular directives that are likely to be used in each and every Angular
+ * application.
  */
 var COMMON_DIRECTIVES = [
     NgClass,
@@ -30840,6 +31542,72 @@ var DateFormatter = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Formats a date according to locale rules.
+ * @howToUse `date_expression | date[:format]`
+ * @description
+ *
+ * Where:
+ * - `expression` is a date object or a number (milliseconds since UTC epoch) or an ISO string
+ * (https://www.w3.org/TR/NOTE-datetime).
+ * - `format` indicates which date/time components to include. The format can be predifined as
+ *   shown below or custom as shown in the table.
+ *   - `'medium'`: equivalent to `'yMMMdjms'` (e.g. `Sep 3, 2010, 12:05:08 PM` for `en-US`)
+ *   - `'short'`: equivalent to `'yMdjm'` (e.g. `9/3/2010, 12:05 PM` for `en-US`)
+ *   - `'fullDate'`: equivalent to `'yMMMMEEEEd'` (e.g. `Friday, September 3, 2010` for `en-US`)
+ *   - `'longDate'`: equivalent to `'yMMMMd'` (e.g. `September 3, 2010` for `en-US`)
+ *   - `'mediumDate'`: equivalent to `'yMMMd'` (e.g. `Sep 3, 2010` for `en-US`)
+ *   - `'shortDate'`: equivalent to `'yMd'` (e.g. `9/3/2010` for `en-US`)
+ *   - `'mediumTime'`: equivalent to `'jms'` (e.g. `12:05:08 PM` for `en-US`)
+ *   - `'shortTime'`: equivalent to `'jm'` (e.g. `12:05 PM` for `en-US`)
+ *
+ *
+ *  | Component | Symbol | Short Form   | Long Form         | Numeric   | 2-digit   |
+ *  |-----------|:------:|--------------|-------------------|-----------|-----------|
+ *  | era       |   G    | G (AD)       | GGGG (Anno Domini)| -         | -         |
+ *  | year      |   y    | -            | -                 | y (2015)  | yy (15)   |
+ *  | month     |   M    | MMM (Sep)    | MMMM (September)  | M (9)     | MM (09)   |
+ *  | day       |   d    | -            | -                 | d (3)     | dd (03)   |
+ *  | weekday   |   E    | EEE (Sun)    | EEEE (Sunday)     | -         | -         |
+ *  | hour      |   j    | -            | -                 | j (13)    | jj (13)   |
+ *  | hour12    |   h    | -            | -                 | h (1 PM)  | hh (01 PM)|
+ *  | hour24    |   H    | -            | -                 | H (13)    | HH (13)   |
+ *  | minute    |   m    | -            | -                 | m (5)     | mm (05)   |
+ *  | second    |   s    | -            | -                 | s (9)     | ss (09)   |
+ *  | timezone  |   z    | -            | z (Pacific Standard Time)| -  | -         |
+ *  | timezone  |   Z    | Z (GMT-8:00) | -                 | -         | -         |
+ *  | timezone  |   a    | a (PM)       | -                 | -         | -         |
+ *
+ * In javascript, only the components specified will be respected (not the ordering,
+ * punctuations, ...) and details of the formatting will be dependent on the locale.
+ *
+ * Timezone of the formatted text will be the local system timezone of the end-user's machine.
+ *
+ * WARNINGS:
+ * - this pipe is marked as pure hence it will not be re-evaluated when the input is mutated.
+ *   Instead users should treat the date as an immutable object and change the reference when the
+ *   pipe needs to re-run (this is to avoid reformatting the date on every change detection run
+ *   which would be an expensive operation).
+ * - this pipe uses the Internationalization API. Therefore it is only reliable in Chrome and Opera
+ *   browsers.
+ *
+ * ### Examples
+ *
+ * Assuming `dateObj` is (year: 2015, month: 6, day: 15, hour: 21, minute: 43, second: 11)
+ * in the _local_ time and locale is 'en-US':
+ *
+ * ```
+ *     {{ dateObj | date }}               // output is 'Jun 15, 2015'
+ *     {{ dateObj | date:'medium' }}      // output is 'Jun 15, 2015, 9:43:11 PM'
+ *     {{ dateObj | date:'shortTime' }}   // output is '9:43 PM'
+ *     {{ dateObj | date:'mmss' }}        // output is '43:11'
+ * ```
+ *
+ * {@example common/pipes/ts/date_pipe.ts region='DatePipe'}
+ *
+ * @stable
+ */
 var DatePipe = (function () {
     function DatePipe(_locale) {
         this._locale = _locale;
@@ -30936,6 +31704,22 @@ var I18nPluralPipe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Generic selector that displays the string that matches the current value.
+ * @howToUse `expression | i18nSelect:mapping`
+ * @description
+ *
+ *  Where:
+ *  - `mapping`: is an object that indicates the text that should be displayed
+ *  for different values of the provided `expression`.
+ *
+ *  ## Example
+ *
+ * {@example common/pipes/ts/i18n_pipe.ts region='I18nSelectPipeComponent'}
+ *
+ *  @experimental
+ */
 var I18nSelectPipe = (function () {
     function I18nSelectPipe() {
     }
@@ -30962,6 +31746,19 @@ var I18nSelectPipe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Converts value into JSON string.
+ * @howToUse `expression | json`
+ * @description
+ *
+ * Converts value into string using `JSON.stringify`. Useful for debugging.
+ *
+ * ### Example
+ * {@example common/pipes/ts/json_pipe.ts region='JsonPipe'}
+ *
+ * @stable
+ */
 var JsonPipe = (function () {
     function JsonPipe() {
     }
@@ -30980,6 +31777,20 @@ var JsonPipe = (function () {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Transforms string to lowercase.
+ * @howToUse `expression | lowercase`
+ * @description
+ *
+ * Converts value into lowercase string using `String.prototype.toLowerCase()`.
+ *
+ * ### Example
+ *
+ * {@example common/pipes/ts/lowerupper_pipe.ts region='LowerUpperPipe'}
+ *
+ * @stable
  */
 var LowerCasePipe = (function () {
     function LowerCasePipe() {
@@ -31182,6 +31993,50 @@ var CurrencyPipe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Creates a new List or String containing a subset (slice) of the elements.
+ * @howToUse `array_or_string_expression | slice:start[:end]`
+ * @description
+ *
+ * Where the input expression is a `List` or `String`, and:
+ * - `start`: The starting index of the subset to return.
+ *   - **a positive integer**: return the item at `start` index and all items after
+ *     in the list or string expression.
+ *   - **a negative integer**: return the item at `start` index from the end and all items after
+ *     in the list or string expression.
+ *   - **if positive and greater than the size of the expression**: return an empty list or string.
+ *   - **if negative and greater than the size of the expression**: return entire list or string.
+ * - `end`: The ending index of the subset to return.
+ *   - **omitted**: return all items until the end.
+ *   - **if positive**: return all items before `end` index of the list or string.
+ *   - **if negative**: return all items before `end` index from the end of the list or string.
+ *
+ * All behavior is based on the expected behavior of the JavaScript API `Array.prototype.slice()`
+ * and `String.prototype.slice()`.
+ *
+ * When operating on a [List], the returned list is always a copy even when all
+ * the elements are being returned.
+ *
+ * When operating on a blank value, the pipe returns the blank value.
+ *
+ * ## List Example
+ *
+ * This `ngFor` example:
+ *
+ * {@example common/pipes/ts/slice_pipe.ts region='SlicePipe_list'}
+ *
+ * produces the following:
+ *
+ *     <li>b</li>
+ *     <li>c</li>
+ *
+ * ## String Examples
+ *
+ * {@example common/pipes/ts/slice_pipe.ts region='SlicePipe_string'}
+ *
+ * @stable
+ */
 var SlicePipe = (function () {
     function SlicePipe() {
     }
@@ -31209,6 +32064,20 @@ var SlicePipe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @ngModule CommonModule
+ * @whatItDoes Transforms string to uppercase.
+ * @howToUse `expression | uppercase`
+ * @description
+ *
+ * Converts value into lowercase string using `String.prototype.toUpperCase()`.
+ *
+ * ### Example
+ *
+ * {@example common/pipes/ts/lowerupper_pipe.ts region='LowerUpperPipe'}
+ *
+ * @stable
+ */
 var UpperCasePipe = (function () {
     function UpperCasePipe() {
     }
@@ -31235,6 +32104,9 @@ var UpperCasePipe = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A collection of Angular pipes that are likely to be used in each and every application.
+ */
 var COMMON_PIPES = [
     AsyncPipe,
     UpperCasePipe,
@@ -31255,6 +32127,13 @@ var COMMON_PIPES = [
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+// Note: This does not contain the location providers,
+// as they need some platform specific implementations to work.
+/**
+ * The module that includes all the basic Angular directives like {@link NgIf}, {@link NgFor}, ...
+ *
+ * @stable
  */
 var CommonModule = (function () {
     function CommonModule() {
@@ -31324,6 +32203,13 @@ var AnimationDriver = (function () {
     return AnimationDriver;
 }());
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$3;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -31849,6 +32735,12 @@ var __extends$47 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Provides DOM operations in any browser environment.
+ *
+ * @security Tread carefully! Interacting with the DOM directly is dangerous and
+ * can introduce XSS risks.
+ */
 var GenericBrowserDomAdapter = (function (_super) {
     __extends$47(GenericBrowserDomAdapter, _super);
     function GenericBrowserDomAdapter() {
@@ -32326,6 +33218,11 @@ var __extends$48 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * `PlatformLocation` encapsulates all of the direct calls to platform APIs.
+ * This class should not be used directly by an application developer. Instead, use
+ * {@link Location}.
+ */
 var BrowserPlatformLocation = (function (_super) {
     __extends$48(BrowserPlatformLocation, _super);
     function BrowserPlatformLocation() {
@@ -32399,6 +33296,8 @@ var BrowserPlatformLocation = (function (_super) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs$3 = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -32701,6 +33600,16 @@ var BrowserGetTestability = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A service that can be used to get and set the title of a current HTML document.
+ *
+ * Since an Angular 2 application can't be bootstrapped on the entire HTML document (`<html>` tag)
+ * it is not possible to bind to the `text` property of the `HTMLTitleElement` elements
+ * (representing the `<title>` tag). Instead, this service can be used to set and get the current
+ * title value.
+ *
+ * @experimental
+ */
 var Title = (function () {
     function Title() {
     }
@@ -32724,6 +33633,14 @@ var Title = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A DI Token representing the main rendering context. In a browser this is the DOM Document.
+ *
+ * Note: Document might not be available in the Application Context when Application and Rendering
+ * Contexts are not the same (e.g. when running the application into a Web Worker).
+ *
+ * @stable
+ */
 var DOCUMENT = new OpaqueToken('DocumentToken');
 
 /**
@@ -32732,6 +33649,9 @@ var DOCUMENT = new OpaqueToken('DocumentToken');
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * @stable
  */
 var EVENT_MANAGER_PLUGINS = new OpaqueToken('EventManagerPlugins');
 /**
@@ -33310,6 +34230,12 @@ var __extends$52 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * A DI token that you can use to provide{@link HammerGestureConfig} to Angular. Use it to configure
+ * Hammer gestures.
+ *
+ * @experimental
+ */
 var HAMMER_GESTURE_CONFIG = new OpaqueToken('HammerGestureConfig');
 /**
  * @experimental
@@ -33490,8 +34416,34 @@ var KeyEventsPlugin = (function (_super) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A pattern that recognizes a commonly useful subset of URLs that are safe.
+ *
+ * This regular expression matches a subset of URLs that will not cause script
+ * execution if used in URL context within a HTML document. Specifically, this
+ * regular expression matches if (comment from here on and regex copied from
+ * Soy's EscapingConventions):
+ * (1) Either a protocol in a whitelist (http, https, mailto or ftp).
+ * (2) or no protocol.  A protocol must be followed by a colon. The below
+ *     allows that by allowing colons only after one of the characters [/?#].
+ *     A colon after a hash (#) must be in the fragment.
+ *     Otherwise, a colon after a (?) must be in a query.
+ *     Otherwise, a colon after a single solidus (/) must be in a path.
+ *     Otherwise, a colon after a double solidus (//) must be in the authority
+ *     (before port).
+ *
+ * The pattern disallows &, used in HTML entity declarations before
+ * one of the characters in [/?#]. This disallows HTML entities used in the
+ * protocol name, which should never happen, e.g. "h&#116;tp" for "http".
+ * It also disallows HTML entities in the first path part of a relative path,
+ * e.g. "foo&lt;bar/baz".  Our existing escaping functions should not produce
+ * that. More importantly, it disallows masking of a colon,
+ * e.g. "javascript&#58;...".
+ *
+ * This regular expression was taken from the Closure sanitization library.
+ */
 var SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi;
-/* A pattern that matches safe srcset values */
+/** A pattern that matches safe data URLs. Only matches image, video and audio types. */
 var DATA_URL_PATTERN = /^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[a-z0-9+\/]+=*$/i;
 function sanitizeUrl(url) {
     url = String(url);
@@ -33514,6 +34466,7 @@ function sanitizeSrcset(srcset) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/** A <body> element that can be safely used to parse untrusted HTML. Lazily initialized below. */
 var inertElement = null;
 /** Lazily initialized to make sure the DOM adapter gets set before use. */
 var DOM = null;
@@ -33775,6 +34728,20 @@ function sanitizeHtml(unsafeHtmlInput) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Regular expression for safe style values.
+ *
+ * Quotes (" and ') are allowed, but a check must be done elsewhere to ensure they're balanced.
+ *
+ * ',' allows multiple values to be assigned to the same property (e.g. background-attachment or
+ * font-family) and hence could allow multiple values to get injected, but that should pose no risk
+ * of XSS.
+ *
+ * The function expression checks only for XSS safety, not for CSS validity.
+ *
+ * This regular expression was taken from the Closure sanitization library, and augmented for
+ * transformation values.
+ */
 var VALUES = '[-,."\'%_!# a-zA-Z0-9]+';
 var TRANSFORMATION_FNS = '(?:matrix|translate|scale|rotate|skew|perspective)(?:X|Y|3d)?';
 var COLOR_FNS = '(?:rgb|hsl)a?';
@@ -33854,6 +34821,37 @@ var __extends$55 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * DomSanitizer helps preventing Cross Site Scripting Security bugs (XSS) by sanitizing
+ * values to be safe to use in the different DOM contexts.
+ *
+ * For example, when binding a URL in an `<a [href]="someValue">` hyperlink, `someValue` will be
+ * sanitized so that an attacker cannot inject e.g. a `javascript:` URL that would execute code on
+ * the website.
+ *
+ * In specific situations, it might be necessary to disable sanitization, for example if the
+ * application genuinely needs to produce a `javascript:` style link with a dynamic value in it.
+ * Users can bypass security by constructing a value with one of the `bypassSecurityTrust...`
+ * methods, and then binding to that value from the template.
+ *
+ * These situations should be very rare, and extraordinary care must be taken to avoid creating a
+ * Cross Site Scripting (XSS) security bug!
+ *
+ * When using `bypassSecurityTrust...`, make sure to call the method as early as possible and as
+ * close as possible to the source of the value, to make it easy to verify no security bug is
+ * created by its use.
+ *
+ * It is not required (and not recommended) to bypass security if the value is safe, e.g. a URL that
+ * does not start with a suspicious protocol, or an HTML snippet that does not contain dangerous
+ * code. The sanitizer leaves safe values intact.
+ *
+ * @security Calling any of the `bypassSecurityTrust...` APIs disables Angular's built-in
+ * sanitization for the value passed in. Carefully check and audit all values and code paths going
+ * into this call. Make sure any user data is appropriately escaped for this security context.
+ * For more detail, see the [Security Guide](http://g.co/ng/security).
+ *
+ * @stable
+ */
 var DomSanitizer = (function () {
     function DomSanitizer() {
     }
@@ -34176,6 +35174,11 @@ var context = _global$3;
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Predicates for use with {@link DebugElement}'s query functions.
+ *
+ * @experimental All debugging apis are currently experimental.
+ */
 
 /**
  * @license
@@ -34234,6 +35237,13 @@ var __platform_browser_private__ = {
  */
 var INTERNAL_BROWSER_PLATFORM_PROVIDERS = __platform_browser_private__.INTERNAL_BROWSER_PLATFORM_PROVIDERS;
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$4;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -34415,6 +35425,13 @@ var __extends$57 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * An implementation of ResourceLoader that uses a template cache to avoid doing an actual
+ * ResourceLoader.
+ *
+ * The template cache needs to be built and loaded into window.$templateCache
+ * via a separate mechanism.
+ */
 var CachedResourceLoader = (function (_super) {
     __extends$57(CachedResourceLoader, _super);
     function CachedResourceLoader() {
@@ -34450,6 +35467,9 @@ var CachedResourceLoader = (function (_super) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @experimental
+ */
 
 /**
  * @experimental API related to bootstrapping are still under review.
@@ -34469,6 +35489,13 @@ var platformBrowserDynamic = createPlatformFactory(platformCoreDynamic, 'browser
  * Entry point for all public APIs of the platform-browser-dynamic package.
  */
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$5;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -34682,6 +35709,13 @@ function hasConstructor$5(value, type) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Base class for control directives.
+ *
+ * Only used internally in the forms module.
+ *
+ * @stable
+ */
 var AbstractControlDirective = (function () {
     function AbstractControlDirective() {
     }
@@ -34786,6 +35820,13 @@ var __extends$59 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * A directive that contains multiple {@link NgControl}s.
+ *
+ * Only used by the forms module.
+ *
+ * @stable
+ */
 var ControlContainer = (function (_super) {
     __extends$59(ControlContainer, _super);
     function ControlContainer() {
@@ -34817,6 +35858,8 @@ var ControlContainer = (function (_super) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs$4 = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -35114,6 +36157,16 @@ var isPromise$2 = __core_private__.isPromise;
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Providers for validators to be used for {@link FormControl}s in a form.
+ *
+ * Provide this using `multi: true` to add validators.
+ *
+ * ### Example
+ *
+ * {@example core/forms/ts/ng_validators/ng_validators.ts region='ng_validators'}
+ * @stable
+ */
 var NG_VALIDATORS = new OpaqueToken('NgValidators');
 /**
  * Providers for asynchronous validators to be used for {@link FormControl}s
@@ -35241,6 +36294,12 @@ function _mergeErrors(arrayOfErrors) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Used to provide a {@link ControlValueAccessor} for form controls.
+ *
+ * See {@link DefaultValueAccessor} for how to implement one.
+ * @stable
  */
 var NG_VALUE_ACCESSOR = new OpaqueToken('NgValueAccessor');
 
@@ -35834,7 +36893,11 @@ function _buildValueString$1(id, value) {
 function _extractId$1(valueString) {
     return valueString.split(':')[0];
 }
-/** Mock interface for HTMLCollection */
+/**
+ * The accessor for writing a value and listening to changes on a select element.
+ *
+ * @stable
+ */
 var SelectMultipleControlValueAccessor = (function () {
     function SelectMultipleControlValueAccessor(_renderer, _elementRef) {
         this._renderer = _renderer;
@@ -36138,6 +37201,11 @@ var __extends$58 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * This is a base class for code shared between {@link NgModelGroup} and {@link FormGroupName}.
+ *
+ * @stable
+ */
 var AbstractFormGroupDirective = (function (_super) {
     __extends$58(AbstractFormGroupDirective, _super);
     function AbstractFormGroupDirective() {
@@ -36315,6 +37383,53 @@ var __extends$63 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Use by directives and components to emit custom Events.
+ *
+ * ### Examples
+ *
+ * In the following example, `Zippy` alternatively emits `open` and `close` events when its
+ * title gets clicked:
+ *
+ * ```
+ * @Component({
+ *   selector: 'zippy',
+ *   template: `
+ *   <div class="zippy">
+ *     <div (click)="toggle()">Toggle</div>
+ *     <div [hidden]="!visible">
+ *       <ng-content></ng-content>
+ *     </div>
+ *  </div>`})
+ * export class Zippy {
+ *   visible: boolean = true;
+ *   @Output() open: EventEmitter<any> = new EventEmitter();
+ *   @Output() close: EventEmitter<any> = new EventEmitter();
+ *
+ *   toggle() {
+ *     this.visible = !this.visible;
+ *     if (this.visible) {
+ *       this.open.emit(null);
+ *     } else {
+ *       this.close.emit(null);
+ *     }
+ *   }
+ * }
+ * ```
+ *
+ * The events payload can be accessed by the parameter `$event` on the components output event
+ * handler:
+ *
+ * ```
+ * <zippy (open)="onOpen($event)" (close)="onClose($event)"></zippy>
+ * ```
+ *
+ * Uses Rx.Observable but provides an adapter to make it work as specified here:
+ * https://github.com/jhusain/observable-spec
+ *
+ * Once a reference implementation of the spec is available, switch to it.
+ * @stable
+ */
 var EventEmitter$1 = (function (_super) {
     __extends$63(EventEmitter, _super);
     /**
@@ -36501,6 +37616,9 @@ var __extends$64 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Indicates that a FormControl is valid, i.e. that no errors exist in the input value.
+ */
 var VALID = 'VALID';
 /**
  * Indicates that a FormControl is invalid, i.e. that an error exists in the input value.
@@ -39198,6 +40316,26 @@ var PatternValidator = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * @whatItDoes Creates an {@link AbstractControl} from a user-specified configuration.
+ *
+ * It is essentially syntactic sugar that shortens the `new FormGroup()`,
+ * `new FormControl()`, and `new FormArray()` boilerplate that can build up in larger
+ * forms.
+ *
+ * @howToUse
+ *
+ * To use, inject `FormBuilder` into your component class. You can then call its methods
+ * directly.
+ *
+ * {@example forms/ts/formBuilder/form_builder_example.ts region='Component'}
+ *
+ *  * **npm package**: `@angular/forms`
+ *
+ *  * **NgModule**: {@link ReactiveFormsModule}
+ *
+ * @stable
+ */
 var FormBuilder = (function () {
     function FormBuilder() {
     }
@@ -39317,6 +40455,10 @@ var InternalFormsSharedModule = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * The ng module for forms.
+ * @stable
+ */
 var FormsModule = (function () {
     function FormsModule() {
     }
@@ -39388,6 +40530,13 @@ var ReactiveFormsModule = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * A backend for http that uses the `XMLHttpRequest` browser API.
+ *
+ * Take care not to evaluate this in non-browser contexts.
+ *
+ * @experimental
+ */
 var BrowserXhr = (function () {
     function BrowserXhr() {
     }
@@ -39400,6 +40549,13 @@ var BrowserXhr = (function () {
     return BrowserXhr;
 }());
 
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var globalScope$6;
 if (typeof window === 'undefined') {
     if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
@@ -39684,6 +40840,8 @@ var ResponseContentType;
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+// Safari and Internet Explorer do not support the iterable parameter to the
+// Map constructor.  We work around that by manually adding the items.
 var createMapFromPairs$5 = (function () {
     try {
         if (new Map([[1, 2]]).size === 1) {
@@ -39915,6 +41073,34 @@ function _flattenArray$5(source, target) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * Polyfill for [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers/Headers), as
+ * specified in the [Fetch Spec](https://fetch.spec.whatwg.org/#headers-class).
+ *
+ * The only known difference between this `Headers` implementation and the spec is the
+ * lack of an `entries` method.
+ *
+ * ### Example
+ *
+ * ```
+ * import {Headers} from '@angular/http';
+ *
+ * var firstHeaders = new Headers();
+ * firstHeaders.append('Content-Type', 'image/jpeg');
+ * console.log(firstHeaders.get('Content-Type')) //'image/jpeg'
+ *
+ * // Create headers from Plain Old JavaScript Object
+ * var secondHeaders = new Headers({
+ *   'X-My-Custom-Header': 'Angular'
+ * });
+ * console.log(secondHeaders.get('X-My-Custom-Header')); //'Angular'
+ *
+ * var thirdHeaders = new Headers(secondHeaders);
+ * console.log(thirdHeaders.get('X-My-Custom-Header')); //'Angular'
+ * ```
+ *
+ * @experimental
+ */
 var Headers = (function () {
     // TODO(vicb): any -> string|string[]
     function Headers(headers) {
@@ -40050,6 +41236,34 @@ var __extends$73 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Creates a response options object to be optionally provided when instantiating a
+ * {@link Response}.
+ *
+ * This class is based on the `ResponseInit` description in the [Fetch
+ * Spec](https://fetch.spec.whatwg.org/#responseinit).
+ *
+ * All values are null by default. Typical defaults can be found in the
+ * {@link BaseResponseOptions} class, which sub-classes `ResponseOptions`.
+ *
+ * This class may be used in tests to build {@link Response Responses} for
+ * mock responses (see {@link MockBackend}).
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/P9Jkk8e8cz6NVzbcxEsD?p=preview))
+ *
+ * ```typescript
+ * import {ResponseOptions, Response} from '@angular/http';
+ *
+ * var options = new ResponseOptions({
+ *   body: '{"name":"Jeff"}'
+ * });
+ * var res = new Response(options);
+ *
+ * console.log('res.json():', res.json()); // Object {name: "Jeff"}
+ * ```
+ *
+ * @experimental
+ */
 var ResponseOptions = (function () {
     function ResponseOptions(_a) {
         var _b = _a === void 0 ? {} : _a, body = _b.body, status = _b.status, headers = _b.headers, statusText = _b.statusText, type = _b.type, url = _b.url;
@@ -40414,6 +41628,10 @@ var URLSearchParams = (function () {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * HTTP request body used by both {@link Request} and {@link Response}
+ * https://fetch.spec.whatwg.org/#body
+ */
 var Body = (function () {
     function Body() {
     }
@@ -40483,6 +41701,26 @@ var __extends$74 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Creates `Response` instances from provided values.
+ *
+ * Though this object isn't
+ * usually instantiated by end-users, it is the primary object interacted with when it comes time to
+ * add data to a view.
+ *
+ * ### Example
+ *
+ * ```
+ * http.request('my-friends.txt').subscribe(response => this.friends = response.text());
+ * ```
+ *
+ * The Response's interface is inspired by the Response constructor defined in the [Fetch
+ * Spec](https://fetch.spec.whatwg.org/#response-class), but is considered a static value whose body
+ * can be accessed many times. There are other differences in the implementation, but this is the
+ * most significant.
+ *
+ * @experimental
+ */
 var Response = (function (_super) {
     __extends$74(Response, _super);
     function Response(responseOptions) {
@@ -40913,6 +42151,32 @@ var __extends$75 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/**
+ * Creates a request options object to be optionally provided when instantiating a
+ * {@link Request}.
+ *
+ * This class is based on the `RequestInit` description in the [Fetch
+ * Spec](https://fetch.spec.whatwg.org/#requestinit).
+ *
+ * All values are null by default. Typical defaults can be found in the {@link BaseRequestOptions}
+ * class, which sub-classes `RequestOptions`.
+ *
+ * ### Example ([live demo](http://plnkr.co/edit/7Wvi3lfLq41aQPKlxB4O?p=preview))
+ *
+ * ```typescript
+ * import {RequestOptions, Request, RequestMethod} from '@angular/http';
+ *
+ * var options = new RequestOptions({
+ *   method: RequestMethod.Post,
+ *   url: 'https://google.com'
+ * });
+ * var req = new Request(options);
+ * console.log('req.method:', RequestMethod[req.method]); // Post
+ * console.log('options.url:', options.url); // https://google.com
+ * ```
+ *
+ * @experimental
+ */
 var RequestOptions = (function () {
     function RequestOptions(_a) {
         var _b = _a === void 0 ? {} : _a, method = _b.method, headers = _b.headers, body = _b.body, url = _b.url, search = _b.search, withCredentials = _b.withCredentials, responseType = _b.responseType;
@@ -41041,6 +42305,46 @@ var __extends$77 = (undefined && undefined.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+// TODO(jeffbcross): properly implement body accessors
+/**
+ * Creates `Request` instances from provided values.
+ *
+ * The Request's interface is inspired by the Request constructor defined in the [Fetch
+ * Spec](https://fetch.spec.whatwg.org/#request-class),
+ * but is considered a static value whose body can be accessed many times. There are other
+ * differences in the implementation, but this is the most significant.
+ *
+ * `Request` instances are typically created by higher-level classes, like {@link Http} and
+ * {@link Jsonp}, but it may occasionally be useful to explicitly create `Request` instances.
+ * One such example is when creating services that wrap higher-level services, like {@link Http},
+ * where it may be useful to generate a `Request` with arbitrary headers and search params.
+ *
+ * ```typescript
+ * import {Injectable, Injector} from '@angular/core';
+ * import {HTTP_PROVIDERS, Http, Request, RequestMethod} from '@angular/http';
+ *
+ * @Injectable()
+ * class AutoAuthenticator {
+ *   constructor(public http:Http) {}
+ *   request(url:string) {
+ *     return this.http.request(new Request({
+ *       method: RequestMethod.Get,
+ *       url: url,
+ *       search: 'password=123'
+ *     }));
+ *   }
+ * }
+ *
+ * var injector = Injector.resolveAndCreate([HTTP_PROVIDERS, AutoAuthenticator]);
+ * var authenticator = injector.get(AutoAuthenticator);
+ * authenticator.request('people.json').subscribe(res => {
+ *   //URL should have included '?password=123'
+ *   console.log('people', res.json());
+ * });
+ * ```
+ *
+ * @experimental
+ */
 var Request = (function (_super) {
     __extends$77(Request, _super);
     function Request(requestOptions) {
@@ -66112,6 +67416,68 @@ var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+/**
+ * Storage is an easy way to store key/value pairs and JSON objects.
+ * Storage uses a variety of storage engines underneath, picking the best one available
+ * depending on the platform.
+ *
+ * When running in a native app context, Storage will prioritize using SQLite, as it's one of
+ * the most stable and widely used file-based databases, and avoids some of the
+ * pitfalls of things like localstorage and IndexedDB, such as the OS deciding to clear out such
+ * data in low disk-space situations.
+ *
+ * When running in the web or as a Progressive Web App, Storage will attempt to use
+ * IndexedDB, WebSQL, and localstorage, in that order.
+ *
+ * @usage
+ * First, if you'd like to use SQLite, install the cordova-sqlite-storage plugin:
+ * ```bash
+ * cordova plugin add cordova-sqlite-storage --save
+ * ```
+ *
+ * Next, install the package (comes by default for Ionic 2 apps >= RC.0)
+ *
+ * ```bash
+ * npm install --save @ionic/storage
+ * ```
+ *
+ * Next, add it to the providers list in your `NgModule` declaration (for example, in `src/app.module.ts`):
+ *
+ * ```typescript
+  import { Storage } from '@ionic/storage';
+
+  @NgModule({
+    declarations: [
+      // ...
+    ],
+    imports: [
+      IonicModule.forRoot(MyApp)
+    ],
+    bootstrap: [IonicApp],
+    entryComponents: [
+      // ...
+    ],
+    providers: [
+      Storage
+    ]
+  })
+  export class AppModule {}
+ *```
+ *
+ * Finally, inject it into any of your components or pages:
+ * ```typescript
+ * import { Storage } from '@ionic/storage';
+
+ * export class MyApp {
+ *   constructor(storage: Storage) {
+ *      storage.set('name', 'Max');
+ *      storage.get('name').then((val) => {
+ *        console.log('Your name is', val);
+ *      })
+ *   }
+ * }
+ * ```
+ */
 var Storage = (function () {
     function Storage() {
         var _this = this;
@@ -66186,13 +67552,13 @@ var Storage = (function () {
 }());
 
 /* ion-compiler */
-var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var PopoverPage = (function () {
@@ -66202,11 +67568,11 @@ var PopoverPage = (function () {
     PopoverPage.prototype.close = function () {
         this.viewCtrl.dismiss();
     };
-    PopoverPage = __decorate$7([
+    PopoverPage = __decorate$4([
         Component({
             template: "\n    <ion-list>\n      <button ion-item (click)=\"close()\">Read More</button>\n      <button ion-item (click)=\"close()\">Documentation</button>\n      <button ion-item (click)=\"close()\">Showcase</button>\n      <button ion-item (click)=\"close()\">What new</button>\n    </ion-list>\n  "
         }), 
-        __metadata$6('design:paramtypes', [(typeof (_a = typeof ViewController !== 'undefined' && ViewController) === 'function' && _a) || Object])
+        __metadata$3('design:paramtypes', [(typeof (_a = typeof ViewController !== 'undefined' && ViewController) === 'function' && _a) || Object])
     ], PopoverPage);
     return PopoverPage;
     var _a;
@@ -66220,290 +67586,13 @@ var AboutPage = (function () {
         var popover = this.popoverCtrl.create(PopoverPage);
         popover.present({ ev: event });
     };
-    AboutPage = __decorate$7([
+    AboutPage = __decorate$4([
         Component({
             selector: 'page-about', template: /* ion-inline-template */ '<ion-header style="background-color: #cbcd9e !important;">\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>About</ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only (click)="presentPopover($event)">\n        <ion-icon name="more"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="about-container">\n  <!-- <div class="about-header">\n    <img src="assets/img/ionic-logo-white.svg">\n  </div> -->\n  <div padding class="about-info">\n    <h4>Who we are...</h4>\n\n    <ion-list no-lines>\n      <ion-item class="about-container">\n        <ion-icon name="calendar" item-left></ion-icon>\n        <ion-label>Updated</ion-label>\n        <ion-datetime displayFormat="MMM DD, YYYY" [(ngModel)]="conferenceDate"></ion-datetime>\n      </ion-item>\n\n      <ion-item class="about-container">\n        <ion-icon name="pin" item-left></ion-icon>\n        <ion-label>Location</ion-label>\n        <ion-select>\n          <ion-option value="madison" selected>New Delhi, India</ion-option>\n          <ion-option value="austin">Austin, TX</ion-option>\n          <ion-option value="chicago">Chicago, IL</ion-option>\n          <ion-option value="seattle">Kalifornia, USA</ion-option>\n        </ion-select>\n      </ion-item>\n    </ion-list>\n      <p>\n        Geeta-Kavita is a website devoted to Hindi Literature, especially poetry and contemplations. The site is run by Rajiv Krishna Saxena, who is a professor of Biology / Immunology and was till recently the President / Vice President of the new South Asian University (SAARC University) in New Delhi. Prof. Saxena runs this site because of his interest in promoting Hindi poetry, literature and the Indian thought. Garima Saxena is an advisor / expert on artwork.\n      </p>\n      <p>\n        Prof. Saxena has translated all 700 Sanskrit shlokas in Shrimad Bhagwat Geeta into metered Hindi verses. This work has been published by Pustak Mahal, Delhi, under the title “Geeta Kavya Madhuri”. Another book of Prof. Saxena “Baal Geeta” was recently published by Penguin Books. In Baal Geeta, main ideas of Geeta have been paraphrased into very simple Hindi verses for children and first time readers of Geeta. Excerpts from Both these books are available on this website.\n      </p>\n      <p>\n        Website has a selection of large number of well known Hindi poems and some thought provoking articles. The collection is constantly growing. Readers can forward the poems / articles they like to their friends and dear ones and thus promote Hindi literature. Facility to forward the link has been provided. Reader’s feedback is most welcome.\n      </p>\n  </div>\n</ion-content>\n'
         }), 
-        __metadata$6('design:paramtypes', [(typeof (_a = typeof PopoverController !== 'undefined' && PopoverController) === 'function' && _a) || Object])
+        __metadata$3('design:paramtypes', [(typeof (_a = typeof PopoverController !== 'undefined' && PopoverController) === 'function' && _a) || Object])
     ], AboutPage);
     return AboutPage;
-    var _a;
-}());
-
-/* ion-compiler */
-var __decorate$11 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$10 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var UserData = (function () {
-    function UserData(events, storage) {
-        this.events = events;
-        this.storage = storage;
-        this._favorites = [];
-        this.HAS_LOGGED_IN = 'hasLoggedIn';
-    }
-    UserData.prototype.hasFavorite = function (sessionName) {
-        return (this._favorites.indexOf(sessionName) > -1);
-    };
-    UserData.prototype.addFavorite = function (sessionName) {
-        this._favorites.push(sessionName);
-    };
-    UserData.prototype.removeFavorite = function (sessionName) {
-        var index = this._favorites.indexOf(sessionName);
-        if (index > -1) {
-            this._favorites.splice(index, 1);
-        }
-    };
-    UserData.prototype.login = function (username) {
-        this.storage.set(this.HAS_LOGGED_IN, true);
-        this.setUsername(username);
-        this.events.publish('user:login');
-    };
-    UserData.prototype.signup = function (username) {
-        this.storage.set(this.HAS_LOGGED_IN, true);
-        this.setUsername(username);
-        this.events.publish('user:signup');
-    };
-    UserData.prototype.logout = function () {
-        this.storage.remove(this.HAS_LOGGED_IN);
-        this.storage.remove('username');
-        this.events.publish('user:logout');
-    };
-    UserData.prototype.setUsername = function (username) {
-        this.storage.set('username', username);
-    };
-    UserData.prototype.getUsername = function () {
-        return this.storage.get('username').then(function (value) {
-            return value;
-        });
-    };
-    // return a promise
-    UserData.prototype.hasLoggedIn = function () {
-        return this.storage.get(this.HAS_LOGGED_IN).then(function (value) {
-            return value === true;
-        });
-    };
-    UserData = __decorate$11([
-        Injectable(), 
-        __metadata$10('design:paramtypes', [(typeof (_a = typeof Events !== 'undefined' && Events) === 'function' && _a) || Object, (typeof (_b = typeof Storage !== 'undefined' && Storage) === 'function' && _b) || Object])
-    ], UserData);
-    return UserData;
-    var _a, _b;
-}());
-
-/* ion-compiler */
-var __decorate$10 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var ConferenceData = (function () {
-    function ConferenceData(http, user) {
-        this.http = http;
-        this.user = user;
-    }
-    ConferenceData.prototype.load = function () {
-        var _this = this;
-        if (this.data) {
-            // already loaded data
-            console.log(this.data);
-            return Promise.resolve(this.data);
-        }
-        // don't have the data yet
-        return new Promise(function (resolve) {
-            // We're using Angular Http provider to request the data,
-            // then on the response it'll map the JSON data to a parsed JS object.
-            // Next we process the data and resolve the promise with the new data.
-            _this.http.get('assets/data/data.json').subscribe(function (res) {
-                // we've got back the raw data, now generate the core schedule data
-                // and save the data for later reference
-                _this.data = _this.processData(res.json());
-                resolve(_this.data);
-            });
-        });
-    };
-    ConferenceData.prototype.processData = function (data) {
-        // just some good 'ol JS fun with objects and arrays
-        // build up the data by linking speakers to sessions
-        var _this = this;
-        data.tracks = [];
-        // loop through each day in the schedule
-        data.schedule.forEach(function (day) {
-            // loop through each timeline group in the day
-            day.groups.forEach(function (group$$1) {
-                // loop through each session in the timeline group
-                group$$1.sessions.forEach(function (session) {
-                    _this.processSession(data, session);
-                });
-            });
-        });
-        return data;
-    };
-    ConferenceData.prototype.processSession = function (data, session) {
-        // loop through each speaker and load the speaker data
-        // using the speaker name as the key
-        session.speakers = [];
-        if (session.speakerNames) {
-            session.speakerNames.forEach(function (speakerName) {
-                var speaker = data.speakers.find(function (s) { return s.name === speakerName; });
-                if (speaker) {
-                    session.speakers.push(speaker);
-                    speaker.sessions = speaker.sessions || [];
-                    speaker.sessions.push(session);
-                }
-            });
-        }
-        if (session.tracks) {
-            session.tracks.forEach(function (track) {
-                if (data.tracks.indexOf(track) < 0) {
-                    data.tracks.push(track);
-                }
-            });
-        }
-    };
-    ConferenceData.prototype.getTimeline = function (dayIndex, queryText, excludeTracks, segment) {
-        var _this = this;
-        if (queryText === void 0) { queryText = ''; }
-        if (excludeTracks === void 0) { excludeTracks = []; }
-        if (segment === void 0) { segment = 'all'; }
-        return this.load().then(function (data) {
-            var day = data.schedule[dayIndex];
-            day.shownSessions = 0;
-            queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
-            var queryWords = queryText.split(' ').filter(function (w) { return !!w.trim().length; });
-            day.groups.forEach(function (group$$1) {
-                group$$1.hide = true;
-                group$$1.sessions.forEach(function (session) {
-                    // check if this session should show or not
-                    _this.filterSession(session, queryWords, excludeTracks, segment);
-                    if (!session.hide) {
-                        // if this session is not hidden then this group should show
-                        group$$1.hide = false;
-                        day.shownSessions++;
-                    }
-                });
-            });
-            return day;
-        });
-    };
-    ConferenceData.prototype.filterSession = function (session, queryWords, excludeTracks, segment) {
-        var matchesQueryText = false;
-        if (queryWords.length) {
-            // of any query word is in the session name than it passes the query test
-            queryWords.forEach(function (queryWord) {
-                if (session.name.toLowerCase().indexOf(queryWord) > -1) {
-                    matchesQueryText = true;
-                }
-            });
-        }
-        else {
-            // if there are no query words then this session passes the query test
-            matchesQueryText = true;
-        }
-        // if any of the sessions tracks are not in the
-        // exclude tracks then this session passes the track test
-        var matchesTracks = false;
-        session.tracks.forEach(function (trackName) {
-            if (excludeTracks.indexOf(trackName) === -1) {
-                matchesTracks = true;
-            }
-        });
-        // if the segement is 'favorites', but session is not a user favorite
-        // then this session does not pass the segment test
-        var matchesSegment = false;
-        if (segment === 'favorites') {
-            if (this.user.hasFavorite(session.name)) {
-                matchesSegment = true;
-            }
-        }
-        else {
-            matchesSegment = true;
-        }
-        // all tests must be true if it should not be hidden
-        session.hide = !(matchesQueryText && matchesTracks && matchesSegment);
-    };
-    ConferenceData.prototype.getSpeakers = function () {
-        return this.load().then(function (data) {
-            return data.speakers.sort(function (a, b) {
-                var aName = a.name.split(' ').pop();
-                var bName = b.name.split(' ').pop();
-                return aName.localeCompare(bName);
-            });
-        });
-    };
-    ConferenceData.prototype.getTracks = function () {
-        return this.load().then(function (data) {
-            return data.tracks.sort();
-        });
-    };
-    ConferenceData.prototype.getMap = function () {
-        return this.load().then(function (data) {
-            return data.map;
-        });
-    };
-    ConferenceData = __decorate$10([
-        Injectable(), 
-        __metadata$9('design:paramtypes', [(typeof (_a = typeof Http !== 'undefined' && Http) === 'function' && _a) || Object, (typeof (_b = typeof UserData !== 'undefined' && UserData) === 'function' && _b) || Object])
-    ], ConferenceData);
-    return ConferenceData;
-    var _a, _b;
-}());
-
-/* ion-compiler */
-var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var MapPage = (function () {
-    function MapPage(confData) {
-        this.confData = confData;
-    }
-    MapPage.prototype.ionViewDidLoad = function () {
-        this.confData.getMap().then(function (mapData) {
-            var mapEle = document.getElementById('map');
-            var map = new google.maps.Map(mapEle, {
-                center: mapData.find(function (d) { return d.center; }),
-                zoom: 16
-            });
-            mapData.forEach(function (markerData) {
-                var infoWindow = new google.maps.InfoWindow({
-                    content: "<h5>" + markerData.name + "</h5>"
-                });
-                var marker = new google.maps.Marker({
-                    position: markerData,
-                    map: map,
-                    title: markerData.name
-                });
-                marker.addListener('click', function () {
-                    infoWindow.open(map, marker);
-                });
-            });
-            google.maps.event.addListenerOnce(map, 'idle', function () {
-                mapEle.classList.add('show-map');
-            });
-        });
-    };
-    MapPage = __decorate$9([
-        Component({
-            selector: 'page-map', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Map</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<!-- <ion-content class="map-page">\n  <div id="map"></div>\n</ion-content> -->\n'
-        }), 
-        __metadata$8('design:paramtypes', [(typeof (_a = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _a) || Object])
-    ], MapPage);
-    return MapPage;
     var _a;
 }());
 
@@ -66670,6 +67759,8 @@ function isUndefined$1(input) {
     return input === void 0;
 }
 
+// Plugins that add properties should also add the key here (null value),
+// so we can properly clone ourselves.
 var momentProperties = hooks.momentProperties = [];
 
 function copyConfig(to, from) {
@@ -66758,6 +67849,7 @@ function toInt(argumentForCoercion) {
     return value;
 }
 
+// compare two arrays, return the number of differences
 function compareArrays(array1, array2, dontConvert) {
     var len = Math.min(array1.length, array2.length),
         lengthDiff = Math.abs(array1.length - array2.length),
@@ -67543,6 +68635,8 @@ function computeMonthsParse () {
     this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
 }
 
+// FORMATTING
+
 addFormatToken('Y', 0, 0, function () {
     var y = this.year();
     return y <= 9999 ? '' + y : '+' + y;
@@ -67629,6 +68723,7 @@ function createUTCDate (y) {
     return date;
 }
 
+// start-of-first-week - start-of-year
 function firstWeekOffset(year, dow, doy) {
     var // first-week day -- which january is always in the first week (4 for iso, 1 for other)
         fwd = 7 + dow - doy,
@@ -67690,6 +68785,8 @@ function weeksInYear(year, dow, doy) {
     return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
 }
 
+// FORMATTING
+
 addFormatToken('w', ['ww', 2], 'wo', 'week');
 addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
 
@@ -67746,6 +68843,8 @@ function getSetISOWeek (input) {
     var week = weekOfYear(this, 1, 4).week;
     return input == null ? week : this.add((input - week) * 7, 'd');
 }
+
+// FORMATTING
 
 addFormatToken('d', 0, 'do', 'day');
 
@@ -68097,6 +69196,8 @@ function computeWeekdaysParse () {
     this._weekdaysMinStrictRegex = new RegExp('^(' + minPieces.join('|') + ')', 'i');
 }
 
+// FORMATTING
+
 function hFormat() {
     return this.hours() % 12 || 12;
 }
@@ -68223,6 +69324,10 @@ function localeMeridiem (hours, minutes, isLower) {
 // this rule.
 var getSetHour = makeGetSet('Hours', true);
 
+// months
+// week
+// weekdays
+// meridiem
 var baseConfig = {
     calendar: defaultCalendar,
     longDateFormat: defaultLongDateFormat,
@@ -68243,6 +69348,7 @@ var baseConfig = {
     meridiemParse: defaultLocaleMeridiemParse
 };
 
+// internal storage for locale config files
 var locales = {};
 var globalLocale;
 
@@ -68433,6 +69539,8 @@ function checkOverflow (m) {
     return m;
 }
 
+// iso 8601 regex
+// 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
 var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
 var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
 
@@ -68686,6 +69794,7 @@ function dayOfYearFromWeekInfo(config) {
     }
 }
 
+// constant that refers to the ISO standard
 hooks.ISO_8601 = function () {};
 
 // date from string and format string
@@ -68783,6 +69892,7 @@ function meridiemFixWrap (locale, hour, meridiem) {
     }
 }
 
+// date from string and array of format strings
 function configFromStringAndArray(config) {
     var tempConfig,
         bestMoment,
@@ -69045,6 +70155,8 @@ function absRound (number) {
     }
 }
 
+// FORMATTING
+
 function offset (token, separator) {
     addFormatToken(token, 0, 0, function () {
         var offset = this.utcOffset();
@@ -69253,6 +70365,7 @@ function isUtc () {
     return this.isValid() ? this._isUTC && this._offset === 0 : false;
 }
 
+// ASP.NET json date format regex
 var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
 
 // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
@@ -69364,6 +70477,7 @@ function momentsDifference(base, other) {
     return res;
 }
 
+// TODO: remove 'name' arg after deprecation is removed
 function createAdder(direction, name) {
     return function (val, period) {
         var dur, tmp;
@@ -69607,6 +70721,9 @@ function toNow (withoutSuffix) {
     return this.to(createLocal(), withoutSuffix);
 }
 
+// If passed a locale key, it will set the locale for this
+// instance.  Otherwise, it will return the locale configuration
+// variables for this instance.
 function locale (key) {
     var newLocaleData;
 
@@ -69751,6 +70868,8 @@ function creationData() {
     };
 }
 
+// FORMATTING
+
 addFormatToken(0, ['gg', 2], 0, function () {
     return this.weekYear() % 100;
 });
@@ -69846,6 +70965,8 @@ function setWeekAll(weekYear, week, weekday, dow, doy) {
     return this;
 }
 
+// FORMATTING
+
 addFormatToken('Q', 0, 'Qo', 'quarter');
 
 // ALIASES
@@ -69868,6 +70989,8 @@ addParseToken('Q', function (input, array) {
 function getSetQuarter (input) {
     return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
 }
+
+// FORMATTING
 
 addFormatToken('D', ['DD', 2], 'Do', 'date');
 
@@ -69895,6 +71018,8 @@ addParseToken('Do', function (input, array) {
 
 var getSetDayOfMonth = makeGetSet('Date', true);
 
+// FORMATTING
+
 addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
 
 // ALIASES
@@ -69921,6 +71046,8 @@ function getSetDayOfYear (input) {
     return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
 }
 
+// FORMATTING
+
 addFormatToken('m', ['mm', 2], 0, 'minute');
 
 // ALIASES
@@ -69941,6 +71068,8 @@ addParseToken(['m', 'mm'], MINUTE);
 
 var getSetMinute = makeGetSet('Minutes', false);
 
+// FORMATTING
+
 addFormatToken('s', ['ss', 2], 0, 'second');
 
 // ALIASES
@@ -69960,6 +71089,8 @@ addParseToken(['s', 'ss'], SECOND);
 // MOMENTS
 
 var getSetSecond = makeGetSet('Seconds', false);
+
+// FORMATTING
 
 addFormatToken('S', 0, 0, function () {
     return ~~(this.millisecond() / 100);
@@ -70019,6 +71150,8 @@ for (token = 'S'; token.length <= 9; token += 'S') {
 // MOMENTS
 
 var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+// FORMATTING
 
 addFormatToken('z',  0, 0, 'zoneAbbr');
 addFormatToken('zz', 0, 0, 'zoneName');
@@ -70637,6 +71770,8 @@ proto$2.lang = lang;
 
 // Side effect imports
 
+// FORMATTING
+
 addFormatToken('X', 0, 0, 'unix');
 addFormatToken('x', 0, 0, 'valueOf');
 
@@ -70692,13 +71827,241 @@ hooks.calendarFormat        = getCalendarFormat;
 hooks.prototype             = proto;
 
 /* ion-compiler */
-var __decorate$13 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$12 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var UserData = (function () {
+    function UserData(events, storage) {
+        this.events = events;
+        this.storage = storage;
+        this._favorites = [];
+        this.HAS_LOGGED_IN = 'hasLoggedIn';
+    }
+    UserData.prototype.hasFavorite = function (sessionName) {
+        return (this._favorites.indexOf(sessionName) > -1);
+    };
+    UserData.prototype.addFavorite = function (sessionName) {
+        this._favorites.push(sessionName);
+    };
+    UserData.prototype.removeFavorite = function (sessionName) {
+        var index = this._favorites.indexOf(sessionName);
+        if (index > -1) {
+            this._favorites.splice(index, 1);
+        }
+    };
+    UserData.prototype.login = function (username) {
+        this.storage.set(this.HAS_LOGGED_IN, true);
+        this.setUsername(username);
+        this.events.publish('user:login');
+    };
+    UserData.prototype.signup = function (username) {
+        this.storage.set(this.HAS_LOGGED_IN, true);
+        this.setUsername(username);
+        this.events.publish('user:signup');
+    };
+    UserData.prototype.logout = function () {
+        this.storage.remove(this.HAS_LOGGED_IN);
+        this.storage.remove('username');
+        this.events.publish('user:logout');
+    };
+    UserData.prototype.setUsername = function (username) {
+        this.storage.set('username', username);
+    };
+    UserData.prototype.getUsername = function () {
+        return this.storage.get('username').then(function (value) {
+            return value;
+        });
+    };
+    // return a promise
+    UserData.prototype.hasLoggedIn = function () {
+        return this.storage.get(this.HAS_LOGGED_IN).then(function (value) {
+            return value === true;
+        });
+    };
+    UserData = __decorate$8([
+        Injectable(), 
+        __metadata$7('design:paramtypes', [(typeof (_a = typeof Events !== 'undefined' && Events) === 'function' && _a) || Object, (typeof (_b = typeof Storage !== 'undefined' && Storage) === 'function' && _b) || Object])
+    ], UserData);
+    return UserData;
+    var _a, _b;
+}());
+
+/* ion-compiler */
+var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var ConferenceData = (function () {
+    function ConferenceData(http, user) {
+        this.http = http;
+        this.user = user;
+    }
+    ConferenceData.prototype.load = function () {
+        var _this = this;
+        if (this.data) {
+            // already loaded data
+            console.log(this.data);
+            return Promise.resolve(this.data);
+        }
+        // don't have the data yet
+        return new Promise(function (resolve) {
+            // We're using Angular Http provider to request the data,
+            // then on the response it'll map the JSON data to a parsed JS object.
+            // Next we process the data and resolve the promise with the new data.
+            _this.http.get('assets/data/data.json').subscribe(function (res) {
+                // we've got back the raw data, now generate the core schedule data
+                // and save the data for later reference
+                _this.data = _this.processData(res.json());
+                resolve(_this.data);
+            });
+        });
+    };
+    ConferenceData.prototype.processData = function (data) {
+        // just some good 'ol JS fun with objects and arrays
+        // build up the data by linking speakers to sessions
+        var _this = this;
+        data.tracks = [];
+        // loop through each day in the schedule
+        data.schedule.forEach(function (day) {
+            // loop through each timeline group in the day
+            day.groups.forEach(function (group$$1) {
+                // loop through each session in the timeline group
+                group$$1.sessions.forEach(function (session) {
+                    _this.processSession(data, session);
+                });
+            });
+        });
+        return data;
+    };
+    ConferenceData.prototype.processSession = function (data, session) {
+        // loop through each speaker and load the speaker data
+        // using the speaker name as the key
+        session.speakers = [];
+        if (session.speakerNames) {
+            session.speakerNames.forEach(function (speakerName) {
+                var speaker = data.speakers.find(function (s) { return s.name === speakerName; });
+                if (speaker) {
+                    session.speakers.push(speaker);
+                    speaker.sessions = speaker.sessions || [];
+                    speaker.sessions.push(session);
+                }
+            });
+        }
+        if (session.tracks) {
+            session.tracks.forEach(function (track) {
+                if (data.tracks.indexOf(track) < 0) {
+                    data.tracks.push(track);
+                }
+            });
+        }
+    };
+    ConferenceData.prototype.getTimeline = function (dayIndex, queryText, excludeTracks, segment) {
+        var _this = this;
+        if (queryText === void 0) { queryText = ''; }
+        if (excludeTracks === void 0) { excludeTracks = []; }
+        if (segment === void 0) { segment = 'all'; }
+        return this.load().then(function (data) {
+            var day = data.schedule[dayIndex];
+            day.shownSessions = 0;
+            queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
+            var queryWords = queryText.split(' ').filter(function (w) { return !!w.trim().length; });
+            day.groups.forEach(function (group$$1) {
+                group$$1.hide = true;
+                group$$1.sessions.forEach(function (session) {
+                    // check if this session should show or not
+                    _this.filterSession(session, queryWords, excludeTracks, segment);
+                    if (!session.hide) {
+                        // if this session is not hidden then this group should show
+                        group$$1.hide = false;
+                        day.shownSessions++;
+                    }
+                });
+            });
+            return day;
+        });
+    };
+    ConferenceData.prototype.filterSession = function (session, queryWords, excludeTracks, segment) {
+        var matchesQueryText = false;
+        if (queryWords.length) {
+            // of any query word is in the session name than it passes the query test
+            queryWords.forEach(function (queryWord) {
+                if (session.name.toLowerCase().indexOf(queryWord) > -1) {
+                    matchesQueryText = true;
+                }
+            });
+        }
+        else {
+            // if there are no query words then this session passes the query test
+            matchesQueryText = true;
+        }
+        // if any of the sessions tracks are not in the
+        // exclude tracks then this session passes the track test
+        var matchesTracks = false;
+        session.tracks.forEach(function (trackName) {
+            if (excludeTracks.indexOf(trackName) === -1) {
+                matchesTracks = true;
+            }
+        });
+        // if the segement is 'favorites', but session is not a user favorite
+        // then this session does not pass the segment test
+        var matchesSegment = false;
+        if (segment === 'favorites') {
+            if (this.user.hasFavorite(session.name)) {
+                matchesSegment = true;
+            }
+        }
+        else {
+            matchesSegment = true;
+        }
+        // all tests must be true if it should not be hidden
+        session.hide = !(matchesQueryText && matchesTracks && matchesSegment);
+    };
+    ConferenceData.prototype.getSpeakers = function () {
+        return this.load().then(function (data) {
+            return data.speakers.sort(function (a, b) {
+                var aName = a.name.split(' ').pop();
+                var bName = b.name.split(' ').pop();
+                return aName.localeCompare(bName);
+            });
+        });
+    };
+    ConferenceData.prototype.getTracks = function () {
+        return this.load().then(function (data) {
+            return data.tracks.sort();
+        });
+    };
+    ConferenceData.prototype.getMap = function () {
+        return this.load().then(function (data) {
+            return data.map;
+        });
+    };
+    ConferenceData = __decorate$7([
+        Injectable(), 
+        __metadata$6('design:paramtypes', [(typeof (_a = typeof Http !== 'undefined' && Http) === 'function' && _a) || Object, (typeof (_b = typeof UserData !== 'undefined' && UserData) === 'function' && _b) || Object])
+    ], ConferenceData);
+    return ConferenceData;
+    var _a, _b;
+}());
+
+/* ion-compiler */
+var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ScheduleFilterPage = (function () {
@@ -70735,24 +72098,24 @@ var ScheduleFilterPage = (function () {
         // can "dismiss" itself and pass back data
         this.viewCtrl.dismiss(data);
     };
-    ScheduleFilterPage = __decorate$13([
+    ScheduleFilterPage = __decorate$9([
         Component({
             selector: 'page-schedule-filter', template: /* ion-inline-template */ '<ion-header>\n  <ion-toolbar>\n    <ion-buttons start>\n      <button ion-button (click)="dismiss()">Cancel</button>\n    </ion-buttons>\n\n    <ion-title>\n      Filter Sessions\n    </ion-title>\n\n    <ion-buttons end>\n      <button ion-button (click)="applyFilters()">Done</button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content class="outer-content">\n\n  <ion-list>\n    <ion-list-header>Tracks</ion-list-header>\n\n    <ion-item *ngFor="let track of tracks" [attr.track]="track.name | lowercase">\n      <span item-left class="dot"></span>\n      <ion-label>{{track.name}}</ion-label>\n      <ion-toggle [(ngModel)]="track.isChecked" color="secondary"></ion-toggle>\n    </ion-item>\n\n  </ion-list>\n\n  <ion-list>\n    <button ion-item (click)="resetFilters()" detail-none class="reset-filters">\n      Reset All Filters\n    </button>\n  </ion-list>\n\n</ion-content>\n'
         }), 
-        __metadata$12('design:paramtypes', [(typeof (_a = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _a) || Object, (typeof (_b = typeof NavParams !== 'undefined' && NavParams) === 'function' && _b) || Object, (typeof (_c = typeof ViewController !== 'undefined' && ViewController) === 'function' && _c) || Object])
+        __metadata$8('design:paramtypes', [(typeof (_a = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _a) || Object, (typeof (_b = typeof NavParams !== 'undefined' && NavParams) === 'function' && _b) || Object, (typeof (_c = typeof ViewController !== 'undefined' && ViewController) === 'function' && _c) || Object])
     ], ScheduleFilterPage);
     return ScheduleFilterPage;
     var _a, _b, _c;
 }());
 
 /* ion-compiler */
-var __decorate$14 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$10 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$13 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var SessionDetailPage = (function () {
@@ -70760,24 +72123,24 @@ var SessionDetailPage = (function () {
         this.navParams = navParams;
         this.session = navParams.data;
     }
-    SessionDetailPage = __decorate$14([
+    SessionDetailPage = __decorate$10([
         Component({
             selector: 'page-session-detail', template: /* ion-inline-template */ '<ion-header>\n   <ion-navbar>\n      <ion-title>Kavita Details</ion-title>\n   </ion-navbar>\n</ion-header>\n<ion-content padding>\n   <h3><b>{{session.name}}</b></h3>\n   <img [src]="session.profilePic" width="340" height="180"> <br>\n   <h4 *ngFor="let speaker of session.speakers">\n      {{speaker.name}}\n   </h4>\n   <!-- <p>\n      {{session.timeStart}} - {{session.timeEnd}}\n   </p> -->\n   <p>{{session.location}}</p>\n   <p>{{session.description}}</p>\n</ion-content>'
         }), 
-        __metadata$13('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
+        __metadata$9('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
     ], SessionDetailPage);
     return SessionDetailPage;
     var _a;
 }());
 
 /* ion-compiler */
-var __decorate$12 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$11 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var SchedulePage = (function () {
@@ -70885,244 +72248,187 @@ var SchedulePage = (function () {
         // now present the alert on top of all other content
         alert.present();
     };
-    __decorate$12([
+    __decorate$6([
         ViewChild('scheduleList', { read: List }), 
-        __metadata$11('design:type', (typeof (_a = typeof List !== 'undefined' && List) === 'function' && _a) || Object)
+        __metadata$5('design:type', (typeof (_a = typeof List !== 'undefined' && List) === 'function' && _a) || Object)
     ], SchedulePage.prototype, "scheduleList", void 0);
-    SchedulePage = __decorate$12([
+    SchedulePage = __decorate$6([
         Component({
             selector: 'page-schedule', template: /* ion-inline-template */ '<ion-header>\n   <ion-navbar no-border-bottom>\n      <button ion-button menuToggle>\n         <ion-icon name="menu"></ion-icon>\n      </button>\n      <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">\n      <ion-segment-button value="all">\n         All News\n      </ion-segment-button>\n      <ion-segment-button value="favorites">\n         Favorites\n      </ion-segment-button>\n      </ion-segment>\n      <ion-buttons end>\n         <button ion-button icon-only (click)="presentFilter()">\n            <ion-icon ios="ios-options-outline" md="md-options"></ion-icon>\n         </button>\n      </ion-buttons>\n   </ion-navbar>\n   <ion-toolbar no-border-top>\n      <ion-searchbar color="primary"\n      [(ngModel)]="queryText"\n      (ionInput)="updateSchedule()"\n      placeholder="Search...">\n      </ion-searchbar>\n   </ion-toolbar>\n</ion-header>\n<ion-content style="background-color: #cbcd9e">\n   <ion-list #scheduleList [hidden]="shownSessions === 0">\n   <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">\n   <ion-item-divider sticky style="background-color: #545627;">\n      <ion-label>\n         {{group.time}}\n      </ion-label>\n   </ion-item-divider>\n   <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0] | lowercase" [hidden]="session.hide">\n   <button ion-item (click)="goToSessionDetail(session)" style="background-color: #cbcd9e;">\n      <div class="list-container">\n         <div class="img-container">\n            <img [src]="session.profilePic" width="60" height="80">\n         </div>\n         <div class="text-container">\n            <h2>\n               {{session.name}}\n            </h2>\n            <br> \n            {{session.timeStart}} &mdash;\n            {{session.timeEnd}}:\n         </div>\n      </div>\n   </button>\n   <ion-item-options>\n      <button ion-button color="favorite" (click)="addFavorite(slidingItem, session)" *ngIf="segment === \'all\'">\n      Favorite\n      </button>\n      <button ion-button color="danger" (click)="removeFavorite(slidingItem, session, \'Remove Favorite\')" *ngIf="segment === \'favorites\'">\n      Remove\n      </button>\n   </ion-item-options>\n   </ion-item-sliding>\n   </ion-item-group>\n   </ion-list>\n   <ion-list-header [hidden]="shownSessions > 0">\n      No Sessions Found\n   </ion-list-header>\n</ion-content>'
         }), 
-        __metadata$11('design:paramtypes', [(typeof (_b = typeof AlertController !== 'undefined' && AlertController) === 'function' && _b) || Object, (typeof (_c = typeof App !== 'undefined' && App) === 'function' && _c) || Object, (typeof (_d = typeof ModalController !== 'undefined' && ModalController) === 'function' && _d) || Object, (typeof (_e = typeof NavController !== 'undefined' && NavController) === 'function' && _e) || Object, (typeof (_f = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _f) || Object, (typeof (_g = typeof UserData !== 'undefined' && UserData) === 'function' && _g) || Object])
+        __metadata$5('design:paramtypes', [(typeof (_b = typeof AlertController !== 'undefined' && AlertController) === 'function' && _b) || Object, (typeof (_c = typeof App !== 'undefined' && App) === 'function' && _c) || Object, (typeof (_d = typeof ModalController !== 'undefined' && ModalController) === 'function' && _d) || Object, (typeof (_e = typeof NavController !== 'undefined' && NavController) === 'function' && _e) || Object, (typeof (_f = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _f) || Object, (typeof (_g = typeof UserData !== 'undefined' && UserData) === 'function' && _g) || Object])
     ], SchedulePage);
     return SchedulePage;
     var _a, _b, _c, _d, _e, _f, _g;
 }());
 
-/* ion-compiler */
-var __decorate$16 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
+var __extends$142 = (commonjsGlobal && commonjsGlobal.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var __metadata$15 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var SpeakerDetailPage = (function () {
-    function SpeakerDetailPage(navCtrl, navParams) {
-        this.navCtrl = navCtrl;
-        this.navParams = navParams;
-        this.speaker = this.navParams.data;
+var Subscriber_1$4 = Subscriber_1$2;
+/**
+ * Applies a given `project` function to each value emitted by the source
+ * Observable, and emits the resulting values as an Observable.
+ *
+ * <span class="informal">Like [Array.prototype.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map),
+ * it passes each source value through a transformation function to get
+ * corresponding output values.</span>
+ *
+ * <img src="./img/map.png" width="100%">
+ *
+ * Similar to the well known `Array.prototype.map` function, this operator
+ * applies a projection to each value and emits that projection in the output
+ * Observable.
+ *
+ * @example <caption>Map every every click to the clientX position of that click</caption>
+ * var clicks = Rx.Observable.fromEvent(document, 'click');
+ * var positions = clicks.map(ev => ev.clientX);
+ * positions.subscribe(x => console.log(x));
+ *
+ * @see {@link mapTo}
+ * @see {@link pluck}
+ *
+ * @param {function(value: T, index: number): R} project The function to apply
+ * to each `value` emitted by the source Observable. The `index` parameter is
+ * the number `i` for the i-th emission that has happened since the
+ * subscription, starting from the number `0`.
+ * @param {any} [thisArg] An optional argument to define what `this` is in the
+ * `project` function.
+ * @return {Observable<R>} An Observable that emits the values from the source
+ * Observable transformed by the given `project` function.
+ * @method map
+ * @owner Observable
+ */
+function map$3(project, thisArg) {
+    if (typeof project !== 'function') {
+        throw new TypeError('argument is not a function. Are you looking for `mapTo()`?');
     }
-    SpeakerDetailPage.prototype.goToSessionDetail = function (session) {
-        this.navCtrl.push(SessionDetailPage, session);
+    return this.lift(new MapOperator(project, thisArg));
+}
+var map_2 = map$3;
+var MapOperator = (function () {
+    function MapOperator(project, thisArg) {
+        this.project = project;
+        this.thisArg = thisArg;
+    }
+    MapOperator.prototype.call = function (subscriber, source) {
+        return source._subscribe(new MapSubscriber(subscriber, this.project, this.thisArg));
     };
-    SpeakerDetailPage = __decorate$16([
-        Component({
-            selector: 'page-speaker-detail', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <ion-title>{{speaker.name}}</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding class="speaker-detail">\n\n  <div text-center>\n    <img [src]="speaker.profilePic" [alt]="speaker.name"><br>\n\n    <button ion-button icon-only clear small color="twitter">\n      <ion-icon name="logo-twitter"></ion-icon>\n    </button>\n    <button ion-button icon-only clear small color="github">\n      <ion-icon name="logo-github"></ion-icon>\n    </button>\n    <button ion-button icon-only clear small color="instagram">\n      <ion-icon name="logo-instagram"></ion-icon>\n    </button>\n  </div>\n\n  <p>{{speaker.about}}</p>\n\n</ion-content>\n'
-        }), 
-        __metadata$15('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof NavParams !== 'undefined' && NavParams) === 'function' && _b) || Object])
-    ], SpeakerDetailPage);
-    return SpeakerDetailPage;
-    var _a, _b;
+    return MapOperator;
 }());
+var MapOperator_1 = MapOperator;
+/**
+ * We need this JSDoc comment for affecting ESDoc.
+ * @ignore
+ * @extends {Ignored}
+ */
+var MapSubscriber = (function (_super) {
+    __extends$142(MapSubscriber, _super);
+    function MapSubscriber(destination, project, thisArg) {
+        _super.call(this, destination);
+        this.project = project;
+        this.count = 0;
+        this.thisArg = thisArg || this;
+    }
+    // NOTE: This looks unoptimized, but it's actually purposefully NOT
+    // using try/catch optimizations.
+    MapSubscriber.prototype._next = function (value) {
+        var result;
+        try {
+            result = this.project.call(this.thisArg, value, this.count++);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        this.destination.next(result);
+    };
+    return MapSubscriber;
+}(Subscriber_1$4.Subscriber));
+
+var map_1$1 = {
+	map: map_2,
+	MapOperator: MapOperator_1
+};
+
+var Observable_1$4 = Observable_1$1;
+var map_1 = map_1$1;
+Observable_1$4.Observable.prototype.map = map_1.map;
 
 /* ion-compiler */
-var __decorate$15 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$12 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$14 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$11 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var SpeakerListPage = (function () {
-    function SpeakerListPage(actionSheetCtrl, navCtrl, confData, config) {
+var PoemService = (function () {
+    function PoemService(http) {
+        this.http = http;
+        console.log('Hello PeopleService Provider.');
+    }
+    PoemService.prototype.load = function () {
         var _this = this;
-        this.actionSheetCtrl = actionSheetCtrl;
-        this.navCtrl = navCtrl;
-        this.confData = confData;
-        this.config = config;
-        this.speakers = [];
-        confData.getSpeakers().then(function (speakers) {
-            _this.speakers = speakers;
+        if (this.data) {
+            return Promise.resolve(this.data);
+        }
+        return new Promise(function (resolve) {
+            _this.http.get('http://www.sparkzeal.com/geetakavita/poem')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (data) {
+                _this.data = data.poems;
+                // console.log(this.data);
+                resolve(_this.data);
+            });
         });
-    }
-    SpeakerListPage.prototype.goToSessionDetail = function (session) {
-        this.navCtrl.push(SessionDetailPage, session);
     };
-    SpeakerListPage.prototype.goToSpeakerDetail = function (speakerName) {
-        this.navCtrl.push(SpeakerDetailPage, speakerName);
-    };
-    SpeakerListPage.prototype.goToSpeakerTwitter = function (speaker) {
-        // TODO FIX
-        // let app = new InAppBrowser(`https://twitter.com/${speaker.twitter}`, '_blank');
-        // app.on('loadstop').subscribe(
-        //   (ev) => {
-        //     console.log('InAppBrowser loaded!');
-        //   });
-    };
-    SpeakerListPage.prototype.openSpeakerShare = function (speaker) {
-        var actionSheet = this.actionSheetCtrl.create({
-            title: 'Share ' + speaker.name,
-            buttons: [
-                {
-                    text: 'Copy Link',
-                    handler: function () {
-                        console.log('Copy link clicked on https://twitter.com/' + speaker.twitter);
-                        if (window['cordova'] && window['cordova'].plugins.clipboard) {
-                            window['cordova'].plugins.clipboard.copy('https://twitter.com/' + speaker.twitter);
-                        }
-                    }
-                },
-                {
-                    text: 'Share via ...',
-                    handler: function () {
-                        console.log('Share via clicked');
-                    }
-                },
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: function () {
-                        console.log('Cancel clicked');
-                    }
-                }
-            ]
-        });
-        actionSheet.present();
-    };
-    SpeakerListPage.prototype.openContact = function (speaker) {
-        var mode = this.config.get('mode');
-        var actionSheet = this.actionSheetCtrl.create({
-            title: 'Contact with ' + speaker.name,
-            buttons: [
-                {
-                    text: "Email ( " + speaker.email + " )",
-                    icon: mode !== 'ios' ? 'mail' : null,
-                    handler: function () {
-                        window.open('mailto:' + speaker.email);
-                    }
-                },
-                {
-                    text: "Call ( " + speaker.phone + " )",
-                    icon: mode !== 'ios' ? 'call' : null,
-                    handler: function () {
-                        window.open('tel:' + speaker.phone);
-                    }
-                }
-            ]
-        });
-        actionSheet.present();
-    };
-    SpeakerListPage = __decorate$15([
-        Component({
-            selector: 'page-speaker-list', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Speakers</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="outer-content speaker-list bg--color">\n  <ion-card *ngFor="let speaker of speakers" class="speaker">\n\n    <ion-card-header>\n      <ion-item class="bg--color">\n        <ion-avatar item-left>\n          <img [src]="speaker.profilePic">\n        </ion-avatar>\n        {{speaker.name}}\n        <button ion-button icon-only (click)="openContact(speaker)" clear item-right>\n          <ion-icon name="help-circle"></ion-icon>\n        </button>\n      </ion-item>\n    </ion-card-header>\n\n    <ion-card-content class="outer-content">\n      <ion-list>\n        <button ion-item *ngFor="let session of speaker.sessions" (click)="goToSessionDetail(session)" class="bg--color">\n          <h3>{{session.name}}</h3>\n        </button>\n        <button ion-item (click)="goToSpeakerDetail(speaker)" class="bg--color">\n          <h3>About {{speaker.name}}</h3>\n        </button>\n      </ion-list>\n    </ion-card-content>\n\n    <ion-item class="bg--color">\n      <button ion-button icon-left (click)="goToSpeakerTwitter(speaker)" clear item-left>\n        <ion-icon name="logo-twitter"></ion-icon>\n        Tweet\n      </button>\n      <button ion-button icon-left (click)="openSpeakerShare(speaker)" clear item-right>\n        <ion-icon name="share"></ion-icon>\n        Share\n      </button>\n    </ion-item>\n\n  </ion-card>\n</ion-content>\n'
-        }), 
-        __metadata$14('design:paramtypes', [(typeof (_a = typeof ActionSheetController !== 'undefined' && ActionSheetController) === 'function' && _a) || Object, (typeof (_b = typeof NavController !== 'undefined' && NavController) === 'function' && _b) || Object, (typeof (_c = typeof ConferenceData !== 'undefined' && ConferenceData) === 'function' && _c) || Object, (typeof (_d = typeof Config !== 'undefined' && Config) === 'function' && _d) || Object])
-    ], SpeakerListPage);
-    return SpeakerListPage;
-    var _a, _b, _c, _d;
-}());
-
-/* ion-compiler */
-var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var TabsPage = (function () {
-    function TabsPage(navParams) {
-        // set the root pages for each tab
-        this.tab1Root = SchedulePage;
-        this.tab2Root = SpeakerListPage;
-        this.tab3Root = MapPage;
-        this.tab4Root = AboutPage;
-        this.mySelectedIndex = navParams.data.tabIndex || 0;
-    }
-    TabsPage = __decorate$6([
-        Component({ template: /* ion-inline-template */ '<ion-tabs [selectedIndex]="mySelectedIndex" tabbarPlacement="top">\n  <ion-tab [root]="tab1Root" tabTitle="All News" tabIcon="calendar"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Group" tabIcon="contacts"></ion-tab>\n  <ion-tab [root]="tab4Root" tabTitle="About" tabIcon="information-circle"></ion-tab>\n</ion-tabs>\n'
-        }), 
-        __metadata$5('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
-    ], TabsPage);
-    return TabsPage;
+    
+    PoemService = __decorate$12([
+        Injectable(), 
+        __metadata$11('design:paramtypes', [(typeof (_a = typeof Http !== 'undefined' && Http) === 'function' && _a) || Object])
+    ], PoemService);
+    return PoemService;
     var _a;
 }());
 
 /* ion-compiler */
-var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+// import { Component } from '@angular/core';
+var __decorate$11 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$10 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var SignupPage = (function () {
-    function SignupPage(navCtrl, userData) {
+var SpeakerListPage = (function () {
+    function SpeakerListPage(navCtrl, peopleService) {
         this.navCtrl = navCtrl;
-        this.userData = userData;
-        this.signup = {};
-        this.submitted = false;
+        this.peopleService = peopleService;
+        this.loadPeople();
     }
-    SignupPage.prototype.onSignup = function (form) {
-        this.submitted = true;
-        if (form.valid) {
-            this.userData.signup(this.signup.username);
-            this.navCtrl.push(TabsPage);
-        }
+    SpeakerListPage.prototype.loadPeople = function () {
+        // this.peopleService.load()
+        // .then(data => {
+        //   this.people = data;
+        //   console.log("jitendra"+this.people);
+        // });
     };
-    SignupPage = __decorate$5([
+    SpeakerListPage = __decorate$11([
         Component({
-            selector: 'page-signup', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Signup</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="login-page">\n\n  <ion-list>\n    <div class="logo">\n      <img src="assets/img/appicon.svg">\n    </div>\n\n    <form #signupForm="ngForm" novalidate>\n      <ion-item>\n        <ion-label floating color="primary">Username</ion-label>\n        <ion-input [(ngModel)]="signup.username" name="username" type="text" #username="ngModel" required>\n        </ion-input>\n      </ion-item>\n      <p [hidden]="username.valid || submitted == false" color="danger" padding-left>\n        Username is required\n      </p>\n\n      <ion-item>\n        <ion-label floating color="primary">Password</ion-label>\n        <ion-input [(ngModel)]="signup.password" name="password" type="password" #password="ngModel" required>\n        </ion-input>\n      </ion-item>\n      <p [hidden]="password.valid || submitted == false" color="danger" padding-left>\n        Password is required\n      </p>\n\n      <div padding>\n        <button ion-button (click)="onSignup(signupForm)" type="submit" block color="primary">Create</button>\n      </div>\n    </form>\n  </ion-list>\n\n</ion-content>\n'
+            selector: 'page-speaker-list',
+            // providers: [PoemService],
+            templateUrl: 'speaker-list.html'
         }), 
-        __metadata$4('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof UserData !== 'undefined' && UserData) === 'function' && _b) || Object])
-    ], SignupPage);
-    return SignupPage;
-    var _a, _b;
-}());
-
-/* ion-compiler */
-var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var LoginPage = (function () {
-    function LoginPage(navCtrl, userData) {
-        this.navCtrl = navCtrl;
-        this.userData = userData;
-        this.login = {};
-        this.submitted = false;
-    }
-    LoginPage.prototype.onLogin = function (form) {
-        this.submitted = true;
-        if (form.valid) {
-            this.userData.login(this.login.username);
-            this.navCtrl.push(TabsPage);
-        }
-    };
-    LoginPage.prototype.onSignup = function () {
-        this.navCtrl.push(SignupPage);
-    };
-    LoginPage = __decorate$4([
-        Component({
-            selector: 'page-login', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Login</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n\n  <ion-list>\n    <div class="logo">\n      <img src="assets/img/appicon.svg">\n    </div>\n\n    <form #loginForm="ngForm" novalidate>\n      <ion-item>\n        <ion-label floating color="primary">Username</ion-label>\n        <ion-input [(ngModel)]="login.username" name="username" type="text" #username="ngModel" spellcheck="false" autocapitalize="off" required>\n        </ion-input>\n      </ion-item>\n      <p [hidden]="username.valid || submitted == false" color="danger" padding-left>\n        Username is required\n      </p>\n\n      <ion-item>\n        <ion-label floating color="primary">Password</ion-label>\n        <ion-input [(ngModel)]="login.password" name="password" type="password" #password="ngModel" required>\n        </ion-input>\n      </ion-item>\n      <p [hidden]="password.valid || submitted == false" color="danger" padding-left>\n        Password is required\n      </p>\n\n      <ion-row responsive-sm>\n        <ion-col>\n          <button ion-button (click)="onLogin(loginForm)" type="submit" color="primary" block>Login</button>\n        </ion-col>\n        <ion-col>\n          <button ion-button (click)="onSignup()" color="light" block>Signup</button>\n        </ion-col>\n      </ion-row>\n    </form>\n  </ion-list>\n\n</ion-content>\n'
-        }), 
-        __metadata$3('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof UserData !== 'undefined' && UserData) === 'function' && _b) || Object])
-    ], LoginPage);
-    return LoginPage;
+        __metadata$10('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof PoemService !== 'undefined' && PoemService) === 'function' && _b) || Object])
+    ], SpeakerListPage);
+    return SpeakerListPage;
     var _a, _b;
 }());
 
@@ -71136,74 +72442,31 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var AccountPage = (function () {
-    function AccountPage(alertCtrl, nav, userData) {
-        this.alertCtrl = alertCtrl;
-        this.nav = nav;
-        this.userData = userData;
+var TabsPage = (function () {
+    function TabsPage(navParams) {
+        // set the root pages for each tab
+        this.tab1Root = SchedulePage;
+        this.tab2Root = SpeakerListPage;
+        this.tab4Root = AboutPage;
+        this.mySelectedIndex = navParams.data.tabIndex || 0;
     }
-    AccountPage.prototype.ngAfterViewInit = function () {
-        this.getUsername();
-    };
-    AccountPage.prototype.updatePicture = function () {
-        console.log('Clicked to update picture');
-    };
-    // Present an alert with the current username populated
-    // clicking OK will update the username and display it
-    // clicking Cancel will close the alert and do nothing
-    AccountPage.prototype.changeUsername = function () {
-        var _this = this;
-        var alert = this.alertCtrl.create({
-            title: 'Change Username',
-            buttons: [
-                'Cancel'
-            ]
-        });
-        alert.addInput({
-            name: 'username',
-            value: this.username,
-            placeholder: 'username'
-        });
-        alert.addButton({
-            text: 'Ok',
-            handler: function (data) {
-                _this.userData.setUsername(data.username);
-                _this.getUsername();
-            }
-        });
-        alert.present();
-    };
-    AccountPage.prototype.getUsername = function () {
-        var _this = this;
-        this.userData.getUsername().then(function (username) {
-            _this.username = username;
-        });
-    };
-    AccountPage.prototype.changePassword = function () {
-        console.log('Clicked to change password');
-    };
-    AccountPage.prototype.logout = function () {
-        this.userData.logout();
-        this.nav.setRoot(LoginPage);
-    };
-    AccountPage = __decorate$3([
-        Component({
-            selector: 'page-account', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Account</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content class="outer-content">\n  <div padding-top text-center *ngIf="username">\n    <img src="http://www.gravatar.com/avatar?d=mm&s=140">\n    <h2>{{username}}</h2>\n\n    <ion-list inset>\n      <button ion-item (click)="updatePicture()">Update Picture</button>\n      <button ion-item (click)="changeUsername()">Change Username</button>\n      <button ion-item (click)="changePassword()">Change Password</button>\n      <button ion-item (click)="logout()">Logout</button>\n    </ion-list>\n  </div>\n</ion-content>\n'
+    TabsPage = __decorate$3([
+        Component({ template: /* ion-inline-template */ '<ion-tabs [selectedIndex]="mySelectedIndex" tabbarPlacement="top">\n  <ion-tab [root]="tab1Root" tabTitle="All News" tabIcon="calendar"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Group" tabIcon="contacts"></ion-tab>\n  <ion-tab [root]="tab4Root" tabTitle="About" tabIcon="information-circle"></ion-tab>\n</ion-tabs>\n'
         }), 
-        __metadata$2('design:paramtypes', [(typeof (_a = typeof AlertController !== 'undefined' && AlertController) === 'function' && _a) || Object, (typeof (_b = typeof NavController !== 'undefined' && NavController) === 'function' && _b) || Object, (typeof (_c = typeof UserData !== 'undefined' && UserData) === 'function' && _c) || Object])
-    ], AccountPage);
-    return AccountPage;
-    var _a, _b, _c;
+        __metadata$2('design:paramtypes', [(typeof (_a = typeof NavParams !== 'undefined' && NavParams) === 'function' && _a) || Object])
+    ], TabsPage);
+    return TabsPage;
+    var _a;
 }());
 
 /* ion-compiler */
-var __decorate$17 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$13 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$16 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$12 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var TutorialPage = (function () {
@@ -71243,11 +72506,11 @@ var TutorialPage = (function () {
         // enable the root left menu when leaving the tutorial page
         this.menu.enable(true);
     };
-    TutorialPage = __decorate$17([
+    TutorialPage = __decorate$13([
         Component({
             selector: 'page-tutorial', template: /* ion-inline-template */ '<ion-header no-shadow>\n  <ion-navbar>\n    <ion-buttons end *ngIf="showSkip">\n      <button ion-button (click)="startApp()" color="primary">Skip</button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content no-bounce class="main-container">\n  <ion-slides [options]="{pager: true}" (ionWillChange)="onSlideChangeStart($event)">\n    <ion-slide *ngFor="let slide of slides">\n      <img [src]="slide.image" class="slide-image"/>\n      <h2 class="slide-title" [innerHTML]="slide.title"></h2>\n      <p [innerHTML]="slide.description"></p>\n    </ion-slide>\n    <ion-slide>\n      <img src="assets/img/header-logo.png" class="slide-image"/>\n      <h2 class="slide-title">Ready to Go?</h2>\n      <button ion-button icon-right large clear (click)="startApp()">\n        Continue\n        <ion-icon name="arrow-forward"></ion-icon>\n      </button>\n    </ion-slide>\n  </ion-slides>\n</ion-content>\n'
         }), 
-        __metadata$16('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof MenuController !== 'undefined' && MenuController) === 'function' && _b) || Object])
+        __metadata$12('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof MenuController !== 'undefined' && MenuController) === 'function' && _b) || Object])
     ], TutorialPage);
     return TutorialPage;
     var _a, _b;
@@ -71275,16 +72538,7 @@ var ConferenceApp = (function () {
         this.appPages = [
             { title: 'All News', component: TabsPage, icon: 'calendar' },
             { title: 'Groups', component: TabsPage, index: 1, icon: 'contacts' },
-            { title: 'Map', component: TabsPage, index: 2, icon: 'map' },
             { title: 'About', component: TabsPage, index: 3, icon: 'information-circle' },
-        ];
-        this.loggedInPages = [
-            { title: 'Account', component: AccountPage, icon: 'person' },
-            { title: 'Logout', component: TabsPage, icon: 'log-out', logsOut: true }
-        ];
-        this.loggedOutPages = [
-            { title: 'Login', component: LoginPage, icon: 'log-in' },
-            { title: 'Signup', component: SignupPage, icon: 'person-add' }
         ];
         this.rootPage = TutorialPage;
         // Call any initial plugins when ready
@@ -71320,12 +72574,6 @@ var ConferenceApp = (function () {
     };
     ConferenceApp.prototype.listenToLoginEvents = function () {
         var _this = this;
-        this.events.subscribe('user:login', function () {
-            _this.enableMenu(true);
-        });
-        this.events.subscribe('user:signup', function () {
-            _this.enableMenu(true);
-        });
         this.events.subscribe('user:logout', function () {
             _this.enableMenu(false);
         });
@@ -71348,6 +72596,35 @@ var ConferenceApp = (function () {
 }());
 
 /* ion-compiler */
+var __decorate$14 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$13 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var SpeakerDetailPage = (function () {
+    function SpeakerDetailPage(navCtrl, navParams) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.speaker = this.navParams.data;
+    }
+    SpeakerDetailPage.prototype.goToSessionDetail = function (session) {
+        this.navCtrl.push(SessionDetailPage, session);
+    };
+    SpeakerDetailPage = __decorate$14([
+        Component({
+            selector: 'page-speaker-detail', template: /* ion-inline-template */ '<ion-header>\n  <ion-navbar>\n    <ion-title>{{speaker.name}}</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding class="speaker-detail">\n\n  <div text-center>\n    <img [src]="speaker.profilePic" [alt]="speaker.name"><br>\n\n    <button ion-button icon-only clear small color="twitter">\n      <ion-icon name="logo-twitter"></ion-icon>\n    </button>\n    <button ion-button icon-only clear small color="github">\n      <ion-icon name="logo-github"></ion-icon>\n    </button>\n    <button ion-button icon-only clear small color="instagram">\n      <ion-icon name="logo-instagram"></ion-icon>\n    </button>\n  </div>\n\n  <p>{{speaker.about}}</p>\n\n</ion-content>\n'
+        }), 
+        __metadata$13('design:paramtypes', [(typeof (_a = typeof NavController !== 'undefined' && NavController) === 'function' && _a) || Object, (typeof (_b = typeof NavParams !== 'undefined' && NavParams) === 'function' && _b) || Object])
+    ], SpeakerDetailPage);
+    return SpeakerDetailPage;
+    var _a, _b;
+}());
+
+/* ion-compiler */
 var __decorate$$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -71365,14 +72642,10 @@ var AppModule = (function () {
             declarations: [
                 ConferenceApp,
                 AboutPage,
-                AccountPage,
-                LoginPage,
-                MapPage,
                 PopoverPage,
                 SchedulePage,
                 ScheduleFilterPage,
                 SessionDetailPage,
-                SignupPage,
                 SpeakerDetailPage,
                 SpeakerListPage,
                 TabsPage,
@@ -71385,14 +72658,10 @@ var AppModule = (function () {
             entryComponents: [
                 ConferenceApp,
                 AboutPage,
-                AccountPage,
-                LoginPage,
-                MapPage,
                 PopoverPage,
                 SchedulePage,
                 ScheduleFilterPage,
                 SessionDetailPage,
-                SignupPage,
                 SpeakerDetailPage,
                 SpeakerListPage,
                 TabsPage,
